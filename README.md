@@ -1,9 +1,9 @@
 # Pushit
 
-*Usage*:
-	pushit [options] [value]
+**Usage**:__
+	*pushit [options] [value]*
 
-**Options**:
+**Options**:__
 	-m: This option is preceded by the commit message.
 	-n: CR number.
 	-p: git pull: Fetch from and integrate with another repository or a local branch.
