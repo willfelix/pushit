@@ -19,7 +19,7 @@
 **Example**:<br />
 	*pushit -n 1532 -m 'Adjustments to the search method in productDAO'*<br />
 
-
+---
 ### Basic Installation
 
 Pushit is installed by running one of the following commands in your terminal. You can install this via the command-line with either `curl` or `wget`.
