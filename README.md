@@ -20,6 +20,13 @@
 	*pushit -n 1532 -m 'Adjustments to the search method in productDAO'*<br />
 
 ---
+
+### Prerequisites
+
+* Unix-based operating system (OS X or Linux)
+* `curl` or `wget` should be installed
+* `git` should be installed
+
 ### Basic Installation
 
 Pushit is installed by running one of the following commands in your terminal. You can install this via the command-line with either `curl` or `wget`.
