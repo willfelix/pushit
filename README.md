@@ -12,9 +12,9 @@
 **Pushit Option**:<br />
 	-h: Show this help message and quit<br />
 <br />
-**Description**:
+**Description**:<br />
 	The pushit command is a shortcut for the git commands.<br />
 	Its the junction of "git add -A && git commit -m [message] && git pull origin [branch] && git push origin [branch]"<br />
 <br />
-**Example**:
+**Example**:<br />
 	pushit -n 1532 -m 'Adjustments to the search method in productDAO'<br />
