@@ -86,10 +86,12 @@ main() {
 		message=''
 		number=''
 		branch=''
-		while getopts ":m:b:n:h:" arg; do
+		while getopts ":m:b:n:" arg; do
 			case $arg in
 				m)
+					echo "$OPTARG"
 					message="$OPTARG"
+					echo "$message"
 					;;
 				b)
 					branch=$OPTARG
