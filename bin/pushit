@@ -89,7 +89,7 @@ main() {
 		while getopts ":m:b:n:h:" arg; do
 			case $arg in
 				m)
-					message=$OPTARG
+					message="$OPTARG"
 					;;
 				b)
 					branch=$OPTARG
