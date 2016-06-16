@@ -89,9 +89,7 @@ main() {
 		while getopts ":m:b:n:" arg; do
 			case $arg in
 				m)
-					echo "$OPTARG"
 					message="$OPTARG"
-					echo "$message"
 					;;
 				b)
 					branch=$OPTARG
@@ -109,8 +107,6 @@ main() {
 		if [ "$message" != "" ] && [ "$number" != "" ]; then
 			message=" | $message"
 		fi
-
-		echo $message
 
 		pushit $number $message $branch
 	fi
