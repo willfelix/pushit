@@ -108,6 +108,8 @@ main() {
 			message=" | $message"
 		fi
 
+		echo $message
+
 		pushit $number $message $branch
 	fi
 
