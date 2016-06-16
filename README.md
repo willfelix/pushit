@@ -24,7 +24,7 @@
 ### Prerequisites
 
 * Unix-based operating system (OS X or Linux)
-* `curl` or `wget` should be installed
+* `[curl](https://curl.haxx.se/download.html)` or `wget` should be installed
 * `git` should be installed
 
 ### Basic Installation
