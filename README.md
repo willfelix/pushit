@@ -24,8 +24,9 @@
 ### Prerequisites
 
 * Unix-based operating system (OS X or Linux)
-* [`curl`](https://curl.haxx.se/download.html) or `wget` should be installed
 * `git` should be installed
+* [`curl`](https://curl.haxx.se/download.html) or [`wget`](http://gnuwin32.sourceforge.net/packages/wget.htm) should be installed
+* > MAC: brew install [curl|wget].
 
 ### Basic Installation
 
