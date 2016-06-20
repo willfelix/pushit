@@ -1,5 +1,9 @@
 #!/bin/bash
 
+get_redmine_token(){
+		echo $(grep "^export REDMINE_API_TOKEN=.*" $HOME/.bash_profile | sed -e 's/export REDMINE_API_TOKEN=//g')
+}
+
 config_redmine(){
 	red_token="$1"
 	if [ "$red_token" == "" ]; then
@@ -16,7 +20,7 @@ config_redmine(){
 }
 
 init_redmine() {
-	REDMINE_API_TOKEN=$(grep "^export REDMINE_API_TOKEN=.*" $HOME/.bash_profile | sed -e 's/export REDMINE_API_TOKEN=//g')
+	REDMINE_API_TOKEN=$( get_redmine_token )
 	if [ "$REDMINE_API_TOKEN" == "" ]; then
 		read -p "Redmine API TOKEN is missing. Do you wanna set it up now? [y|N] " red
 		if [ "$red" == "y" ] || [ "$red" == "Y" ]; then
@@ -29,7 +33,7 @@ init_redmine() {
 }
 
 redmine() {
-	token="$REDMINE_API_TOKEN"
+	token=$( get_redmine_token )
 	number=$1
 	curl -v -H "Content-Type: application/json" -X PUT -d "{ \"issue\": { \"id\": \"$number\", \"status_id\": \"2\" } }" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/issues/$number.json
 }
@@ -64,9 +68,7 @@ pushit() {
 		git add -A && git commit -m "$message" && git pull origin $branch && git push origin $branch
 
 		if [ $1 != "" ]; then
-			if [ "$REDMINE_API_TOKEN" != "" ]; then
 				redmine $1
-			fi
 		fi
 
 	fi
