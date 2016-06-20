@@ -30,7 +30,7 @@ pushit() {
 		git add -A && git commit -m "$message" && git pull origin $branch && git push origin $branch
 
 		if [ $1 != "" ]; then
-			redmine $number
+			redmine $1
 		fi
 	fi
 
