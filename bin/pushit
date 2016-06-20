@@ -1,19 +1,26 @@
 #!/bin/bash
 
+config_redmine(){
+	red_token="$1"
+	if [ "$red_token" == "" ]; then
+		printf "You can find your API key on your account page ( /my/account ) when logged in.\n"
+		read -p "Insert here your REDMINE API TOKEN: " red_token
+	fi
+
+	echo "export REDMINE_API_TOKEN=$red_token" >> ~/.bash_profile
+	if [ -e ~/.zshrc ]; then
+		echo "export REDMINE_API_TOKEN=$red_token" >> ~/.zshrc
+	fi
+	source ~/.bash_profile
+
+	echo "OK dude. Now you can update any issue passing the CR number by the pushit"
+}
+
 init_redmine() {
 	if [ "$REDMINE_API_TOKEN" == "" ]; then
 		read -p "Redmine API TOKEN is missing. Do you wanna set it up now? [y|N] " red
 		if [ "$red" == "y" ] || [ "$red" == "Y" ]; then
-			printf "You can find your API key on your account page ( /my/account ) when logged in.\n"
-			read -p "Insert here your REDMINE API TOKEN: " red_token
-
-			echo "export REDMINE_API_TOKEN=$red_token" >> ~/.bash_profile
-			if [ -e "~/.zshrc" ]; then
-				echo "export REDMINE_API_TOKEN=$red_token" >> ~/.zshrc
-			fi
-			source ~/.bash_profile
-
-			echo "OK dude. Now you can update any issue passing the CR number by the pushit"
+			config_redmine
 		fi
 
 		printf "\n"
@@ -108,7 +115,7 @@ help() {
 }
 
 version() {
-	printf 'version: 2.0.0\n'
+	printf 'version: 2.1.0\n'
 }
 
 main() {
@@ -120,6 +127,8 @@ main() {
 		help
 	elif [ $1 == '-v' -o $1 == 'version' ]; then
 		version
+	elif [ $1 == '-r' -o $1 == 'redmine' ]; then
+		config_redmine
 	elif [ $1 == '-p' -o $1 == 'pull' ]; then
 		branch="$(git branch | grep '* ' | sed -e 's/* //g')"
 		git pull origin $branch
@@ -129,7 +138,7 @@ main() {
 		message=''
 		number=''
 		branch=''
-		while getopts ":m:b:n:" arg; do
+		while getopts ":m:b:n:r:" arg; do
 			case $arg in
 				m)
 					message="$OPTARG"
@@ -139,6 +148,11 @@ main() {
 					;;
 				n)
 					number=$OPTARG
+					;;
+				r)
+					redmine="$OPTARG"
+					config_redmine $redmine
+					exit 1;
 					;;
 				*)
 					printf "Invalid option. Use -h option to open the help text.\n"
