@@ -108,7 +108,7 @@ help() {
 }
 
 version() {
-	printf 'version: 1.0.0\n'
+	printf 'version: 2.0.0\n'
 }
 
 main() {
