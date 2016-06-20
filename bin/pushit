@@ -1,7 +1,7 @@
 #!/bin/bash
 
 get_redmine_token(){
-		echo $(grep "^export REDMINE_API_TOKEN=.*" $HOME/.bash_profile | sed -e 's/export REDMINE_API_TOKEN=//g')
+	echo $(grep "^export REDMINE_API_TOKEN=.*" $HOME/.bash_profile | sed -e 's/export REDMINE_API_TOKEN=//g')
 }
 
 config_redmine(){
@@ -35,7 +35,7 @@ init_redmine() {
 redmine() {
 	token=$( get_redmine_token )
 	number=$1
-	curl -v -H "Content-Type: application/json" -X PUT -d "{ \"issue\": { \"id\": \"$number\", \"status_id\": \"32\" } }" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/issues/$number.json
+	curl -v -H "Content-Type: application/json" -X PUT -d "{ \"issue\": { \"id\": \"$number\", \"status_id\": \"2\" } }" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/issues/$number.json
 }
 
 pushit() {
