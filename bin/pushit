@@ -1,7 +1,26 @@
 #!/bin/bash
 
+init_redmine() {
+	if [ "$REDMINE_API_TOKEN" == "" ]; then
+		read -p "Redmine API TOKEN is missing. Do you wanna set it up now? [y|N] " red
+		if [ "$red" == "y" ] || [ "$red" == "Y" ]; then
+			read -p "Insert here your REDMINE API TOKEN: " red_token
+			export REDMINE_API_TOKEN=$red_token
+
+			echo "export REDMINE_API_TOKEN=$red_token" >> "~/.bash_profile"
+			if [ -e "~/.zshrc" ]; then
+				echo "export REDMINE_API_TOKEN=$red_token" >> "~/.zshrc"
+			fi
+
+			printf "OK dude. Now you can update any issue passing the CR number by the pushit\n"
+		fi
+
+		exit 1;
+	fi
+}
+
 redmine() {
-	token="60a90e73475a3e486871ba69f89a865d4043abb0"
+	token="$REDMINE_API_TOKEN"
 	number=$1
 	curl -v -H "Content-Type: application/json" -X PUT -d "{ \"issue\": { \"id\": \"$number\", \"status_id\": \"2\" } }" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/issues/$number.json
 }
@@ -36,7 +55,9 @@ pushit() {
 		git add -A && git commit -m "$message" && git pull origin $branch && git push origin $branch
 
 		if [ $1 != "" ]; then
-			redmine $1
+			if [ "$REDMINE_API_TOKEN" != "" ]; then
+				redmine $1
+			fi
 		fi
 
 	fi
@@ -89,7 +110,8 @@ version() {
 }
 
 main() {
-
+	init_redmine
+	
 	if [ $# -eq 0 ]; then
 		setup
 	elif [ $1 == '-h' -o $1 == 'help' ]; then
