@@ -18,6 +18,8 @@ pushit() {
 		exit 1;
 	fi
 
+	message="CR: #$1 | $2"
+
 	echo ""
 	printf ':: Commit: %s\n' "$message"
 	printf ':: Branch: %s\n\n\n' "$branch"
@@ -26,6 +28,7 @@ pushit() {
 	if [ "$push" == "y" ] || [ "$push" == "Y" ]; then
 		echo ""
 		git add -A && git commit -m "$message" && git pull origin $branch && git push origin $branch
+
 		if [ $1 != "" ]; then
 			redmine $number
 		fi
@@ -43,12 +46,12 @@ setup() {
 	read -p "Do you wanna put some message? [y|N] " hasMessage
 
 	if [ "$hasMessage" != 'Y' ] && [ "$hasMessage" != 'y' ]; then
-		pushit "CR #$number"
+		pushit $number
 		exit 1;
 	fi
 
 	read -p "Commit message: " message
-	pushit "CR #$number" " | $message"
+	pushit $number "$message"
 }
 
 help() {
@@ -104,7 +107,7 @@ main() {
 					branch=$OPTARG
 					;;
 				n)
-					number="CR: #$OPTARG "
+					number=$OPTARG
 					;;
 				*)
 					printf "Invalid option. Use -h option to open the help text.\n"
@@ -113,11 +116,7 @@ main() {
 			esac
 		done
 
-		if [ "$message" != "" ] && [ "$number" != "" ]; then
-			message=" | $message"
-		fi
-
-		pushit $number $message $branch
+		pushit $number "$message" "$branch"
 	fi
 
 	exit 1;
