@@ -26,7 +26,6 @@ pushit() {
 		message="CR: #$1"
 	fi
 
-
 	echo ""
 	printf ':: Commit: %s\n' "$message"
 	printf ':: Branch: %s\n\n\n' "$branch"
