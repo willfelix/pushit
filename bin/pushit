@@ -11,12 +11,12 @@ config_redmine(){
 	if [ -e ~/.zshrc ]; then
 		echo "export REDMINE_API_TOKEN=$red_token" >> ~/.zshrc
 	fi
-	source ~/.bash_profile
 
 	echo "OK dude. Now you can update any issue passing the CR number by the pushit"
 }
 
 init_redmine() {
+	REDMINE_API_TOKEN=$(grep "^export REDMINE_API_TOKEN=.*" $HOME/.bash_profile | sed -e 's/export REDMINE_API_TOKEN=//g')
 	if [ "$REDMINE_API_TOKEN" == "" ]; then
 		read -p "Redmine API TOKEN is missing. Do you wanna set it up now? [y|N] " red
 		if [ "$red" == "y" ] || [ "$red" == "Y" ]; then
