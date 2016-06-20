@@ -85,12 +85,12 @@ setup() {
 	read -p "Do you wanna put some message? [y|N] " hasMessage
 
 	if [ "$hasMessage" != 'Y' ] && [ "$hasMessage" != 'y' ]; then
-		pushit $number
+		pushit "$number"
 		exit 1;
 	fi
 
 	read -p "Commit message: " message
-	pushit $number "$message"
+	pushit "$number" "$message"
 }
 
 help() {
