@@ -5,11 +5,8 @@ get_redmine_token(){
 }
 
 config_redmine(){
-	red_token="$1"
-	if [ "$red_token" == "" ]; then
-		printf "You can find your API key on your account page ( /my/account ) when logged in.\n"
-		read -p "Insert here your REDMINE API TOKEN: " red_token
-	fi
+	printf "You can find your API key on your account page ( /my/account ) when logged in.\n"
+	read -p "Insert here your REDMINE API TOKEN: " red_token
 
 	echo "export REDMINE_API_TOKEN=$red_token" >> ~/.bash_profile
 	if [ -e ~/.zshrc ]; then
@@ -44,7 +41,6 @@ pushit() {
 		branch="$(git branch | grep '* ' | sed -e 's/* //g')"
 	fi
 
-	message="$1$2"
 	if [ "$1" == "" ] && [ "$2" == "" ]; then
 		printf 'Please, enter the CR number with the option -n, or describe it using the option -m\n\n'
 		exit 1;
@@ -68,7 +64,7 @@ pushit() {
 		git add -A && git commit -m "$message" && git pull origin $branch && git push origin $branch
 
 		if [ "$1" != "" ]; then
-				redmine $1
+			redmine $1
 		fi
 
 	fi
