@@ -4,6 +4,7 @@ init_redmine() {
 	if [ "$REDMINE_API_TOKEN" == "" ]; then
 		read -p "Redmine API TOKEN is missing. Do you wanna set it up now? [y|N] " red
 		if [ "$red" == "y" ] || [ "$red" == "Y" ]; then
+			pushit "You can find your API key on your account page ( /my/account ) when logged in.\n"
 			read -p "Insert here your REDMINE API TOKEN: " red_token
 			export REDMINE_API_TOKEN=$red_token
 
@@ -12,9 +13,10 @@ init_redmine() {
 				echo "export REDMINE_API_TOKEN=$red_token" >> "~/.zshrc"
 			fi
 
-			printf "OK dude. Now you can update any issue passing the CR number by the pushit\n"
+			echo "OK dude. Now you can update any issue passing the CR number by the pushit"
 		fi
 
+		printf "\n"
 		exit 1;
 	fi
 }
@@ -111,7 +113,7 @@ version() {
 
 main() {
 	init_redmine
-	
+
 	if [ $# -eq 0 ]; then
 		setup
 	elif [ $1 == '-h' -o $1 == 'help' ]; then
