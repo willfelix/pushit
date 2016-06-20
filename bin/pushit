@@ -1,5 +1,11 @@
 #!/bin/bash
 
+redmine() {
+	token="60a90e73475a3e486871ba69f89a865d4043abb0"
+	number=$1
+	curl -v -H "Content-Type: application/json" -X PUT -d "{ \"issue\": { \"id\": \"$number\", \"status_id\": \"2\" } }" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/issues/$number.json
+}
+
 pushit() {
 	branch=$3
 	if [ "$branch" == "" ]; then
@@ -20,6 +26,9 @@ pushit() {
 	if [ "$push" == "y" ] || [ "$push" == "Y" ]; then
 		echo ""
 		git add -A && git commit -m "$message" && git pull origin $branch && git push origin $branch
+		if [ $1 != "" ]; then
+			redmine $number
+		fi
 	fi
 
 	printf "\nFatality...\n"
@@ -32,7 +41,7 @@ setup() {
 
 	read -p "Enter the CR number: " number
 	read -p "Do you wanna put some message? [y|N] " hasMessage
-	
+
 	if [ "$hasMessage" != 'Y' ] && [ "$hasMessage" != 'y' ]; then
 		pushit "CR #$number"
 		exit 1;
