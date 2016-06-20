@@ -13,12 +13,19 @@ pushit() {
 	fi
 
 	message="$1$2"
-	if [ "$message" == "" ]; then
+	if [ "$1" == "" ] && [ "$2" == "" ]; then
 		printf 'Please, enter the CR number with the option -n, or describe it using the option -m\n\n'
 		exit 1;
 	fi
 
 	message="CR: #$1 | $2"
+	if [ "$1" == "" ]; then
+		message="$2"
+	fi
+	if [ "$2" == "" ]; then
+		message="CR: #$1"
+	fi
+
 
 	echo ""
 	printf ':: Commit: %s\n' "$message"
@@ -32,6 +39,7 @@ pushit() {
 		if [ $1 != "" ]; then
 			redmine $1
 		fi
+
 	fi
 
 	printf "\nFatality...\n"
