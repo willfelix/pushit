@@ -8,9 +8,18 @@ config_redmine(){
 	printf "You can find your API key on your account page ( /my/account ) when logged in.\n"
 	read -p "Insert here your REDMINE API TOKEN: " red_token
 
-	echo "export REDMINE_API_TOKEN=$red_token" >> ~/.bash_profile
-	if [ -e ~/.zshrc ]; then
-		echo "export REDMINE_API_TOKEN=$red_token" >> ~/.zshrc
+	token=$( get_redmine_token )
+	if [ "$token" != "" ]; then
+
+		sed -i "" "s/REDMINE_API_TOKEN=$token/REDMINE_API_TOKEN=$red_token/g" $HOME/.bash_profile
+		
+	else
+
+		echo "export REDMINE_API_TOKEN=$red_token" >> ~/.bash_profile
+		if [ -e ~/.zshrc ]; then
+			echo "export REDMINE_API_TOKEN=$red_token" >> ~/.zshrc
+		fi
+
 	fi
 
 	echo "OK dude. Now you can update any issue passing the CR number by the pushit"
