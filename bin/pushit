@@ -103,14 +103,18 @@ help() {
 	printf 'Options:\n'
 	printf '  %s:\t# This option is preceded by the commit message.\n' "-m"
 	printf '  %s:\t# CR number.\n' "-n"
-	printf '  %s:\t# git pull: Fetch from and integrate with another repository or a local branch.\n' "-p"
-	printf '  %s:\t# Which branch to use. If this option does not be called, the current branch will be used.\n\n' "-b"
+	printf '  %s:\t# git checkout. If this option does not be called, the current branch will be used.\n' "-b"
+	printf '  %s:\t# Close the issue specified by the CR number (Redmine).\n\n' "-q"
 
-	printf 'Pushit Option:\n'
-	printf '  %s:\t# Show this help message and quit\n\n' "-h"
+	printf 'Flags:\n'
+	printf '  %s:\t# Show this help message and quit\n' "-h"
+	printf "  %s:\t# Pushit's version\n" "-v"
+	printf '  %s:\t# Redmine config: This flag will initialize the Redmine config token.\n' "-r"
+	printf '  %s:\t# git pull: Fetch from and integrate with another repository or a local branch.\n' "-p"
+	printf '  %s:\t# git status: The same as git status.\n\n' "-s"
 
 	printf 'Description:\n'
-	printf '  The pushit command is a shortcut for the git commands.\n'
+	printf '  The pushit command is a shortcut for the git commands and some extras features like redmine integration.\n'
 	printf '  Its the junction of %s ' "git add -A && git commit -m [message] && git pull origin [branch] && git push origin [branch]"
 	printf '\n\n'
 
@@ -150,7 +154,7 @@ init_options() {
 	number=''
 	branch=''
 	close_message=''
-	while getopts ":m:b:n:c:" arg; do
+	while getopts ":m:b:n:q:" arg; do
 		case $arg in
 			m)
 				message="$OPTARG"
@@ -163,7 +167,7 @@ init_options() {
 			n)
 				number=$OPTARG
 				;;
-			c)
+			q)
 				close_message=$OPTARG
 				;;
 			*)
