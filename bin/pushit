@@ -71,7 +71,7 @@ pushit() {
 		git add -A && git commit -m "$message" && git pull origin $branch && git push origin $branch
 
 		if [ "$1" != "" ]; then
-			redmine $1
+			redmine "$1" "$4"
 		fi
 
 	fi
