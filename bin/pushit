@@ -33,10 +33,12 @@ redmine() {
 	token=$( get_redmine_token )
 	number=$1
 	status=2
-	if [ "$2" != "" ]; then
+	note=''
+ 	if [ "$2" != "" ]; then
 		status=32
+		note="$2"
 	fi
-	curl -v -H "Content-Type: application/json" -X PUT -d "{ \"issue\": { \"id\": \"$number\", \"status_id\": \"$status\" } }" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/issues/$number.json
+	curl -v -H "Content-Type: application/json" -X PUT -d "{ \"issue\": { \"id\": \"$number\", \"status_id\": \"$status\", \"notes\": \"$note\" } }" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/issues/$number.json
 }
 
 pushit() {
