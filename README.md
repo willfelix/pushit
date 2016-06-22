@@ -6,12 +6,15 @@
 **Options**:<br />
 	-m: *This option is preceded by the commit message.*<br />
 	-n: *CR number.*<br />
-	-p: *git pull: Fetch from and integrate with another repository or a local branch.*<br />
-	-r: *redimne config: This flag will initialize the Redmine config token and base URL..*<br />
 	-b: *git checkout. If this option does not be called, the current branch will be used.*<br />
+	-q: *Close the issue specified by the CR number (Redmine).*<br />
 <br />
-**Pushit Option**:<br />
+**Flags**:<br />
 	-h: *Show this help message and quit*<br />
+	-v: *Pushit's version*<br />
+	-r: *redmine config: This flag will initialize the Redmine config token.*<br />
+	-p: *git pull: Fetch from and integrate with another repository or a local branch.*<br />
+	-s: *git status: The same as git status.*<br />
 <br />
 **Description**:<br />
 	*The pushit command is a shortcut for the git commands and some extras features like redmine integration.*<br />
