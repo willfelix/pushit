@@ -119,6 +119,7 @@ help() {
 	printf '  %s:\t# CR number.\n' "-n"
 	printf '  %s:\t# git checkout. If this option does not be called, the current branch will be used.\n' "-b"
 	printf '  %s:\t# Close the issue specified by the CR number (Redmine).\n\n' "-q"
+	printf '  %s:\t# To specific a server to update the code (Ex: heroku).\n\n' "-s"
 
 	printf 'Flags:\n'
 	printf '  %s:\t# Show this help message and quit\n' "-h"
@@ -139,7 +140,7 @@ help() {
 
 version() {
 	printf 'version: 2.1.0\n'
-	
+
 	printf '========\n'
 	printf 'OS NAME\n'
 
