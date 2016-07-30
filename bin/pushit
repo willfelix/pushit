@@ -12,7 +12,7 @@ config_redmine(){
 	if [ "$token" != "" ]; then
 
 		sed -i "" "s/REDMINE_API_TOKEN=$token/REDMINE_API_TOKEN=$red_token/g" $HOME/.bash_profile
-		
+
 	else
 
 		echo "export REDMINE_API_TOKEN=$red_token" >> ~/.bash_profile
@@ -80,6 +80,9 @@ pushit() {
 	if [ "$push" == "y" ] || [ "$push" == "Y" ]; then
 		echo ""
 		git add -A && git commit -m "$message" && git pull origin $branch && git push origin $branch
+		if [ "$5" != "" ]; then
+			git pull $5 master && git push $5 master
+		fi
 
 		if [ "$1" != "" ]; then
 			redmine "$1" "$4"
@@ -165,7 +168,8 @@ init_options() {
 	number=''
 	branch=''
 	close_message=''
-	while getopts ":m:b:n:q:" arg; do
+	server=''
+	while getopts ":m:b:n:q:s:" arg; do
 		case $arg in
 			m)
 				message="$OPTARG"
@@ -181,6 +185,9 @@ init_options() {
 			q)
 				close_message=$OPTARG
 				;;
+			q)
+				server=$OPTARG
+				;;
 			*)
 				printf "Invalid option. Use -h option to open the help text.\n"
 				exit 1;
@@ -188,7 +195,7 @@ init_options() {
 		esac
 	done
 
-	pushit "$number" "$message" "$branch" "$close_message"
+	pushit "$number" "$message" "$branch" "$close_message" "$server"
 }
 
 main() {
