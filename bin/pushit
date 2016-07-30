@@ -141,8 +141,8 @@ help() {
 version() {
 	printf 'version: 2.2.0\n'
 
-	printf '\n-------------------------\n'
-	printf 'OS NAME: '
+	printf '\n -------------------------\n'
+	printf ' OS NAME: '
 
 	if [ "$(uname)" == "Darwin" ]; then
   		printf 'MACOSX\n'  # Do something under Mac OS X platform
@@ -152,7 +152,7 @@ version() {
     		printf 'WINDOWS\n'# Do something under Windows NT platform
 	fi
 
-	printf '-------------------------\n'
+	printf ' -------------------------\n'
 }
 
 init_flags() {
