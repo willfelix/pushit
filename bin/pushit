@@ -118,8 +118,8 @@ help() {
 	printf '  %s:\t# This option is preceded by the commit message.\n' "-m"
 	printf '  %s:\t# CR number.\n' "-n"
 	printf '  %s:\t# git checkout. If this option does not be called, the current branch will be used.\n' "-b"
-	printf '  %s:\t# Close the issue specified by the CR number (Redmine).\n\n' "-q"
-	printf '  %s:\t# To specific a server to update the code (Ex: heroku).\n\n' "-s"
+	printf '  %s:\t# Close the issue specified by the CR number (Redmine).\n' "-q"
+	printf '  %s:\t# To specific a server origin to update the code (Ex: heroku).\n\n' "-o"
 
 	printf 'Flags:\n'
 	printf '  %s:\t# Show this help message and quit\n' "-h"
@@ -183,7 +183,7 @@ init_options() {
 	branch=''
 	close_message=''
 	server=''
-	while getopts ":m:b:n:q:s:" arg; do
+	while getopts ":m:b:n:q:o:" arg; do
 		case $arg in
 			m)
 				message="$OPTARG"
@@ -199,7 +199,7 @@ init_options() {
 			q)
 				close_message=$OPTARG
 				;;
-			q)
+			o)
 				server=$OPTARG
 				;;
 			*)
