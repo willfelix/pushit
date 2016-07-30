@@ -139,6 +139,19 @@ help() {
 
 version() {
 	printf 'version: 2.1.0\n'
+	
+	printf '========\n'
+	printf 'OS NAME\n'
+
+	if [ "$(uname)" == "Darwin" ]; then
+  		printf 'MACOSX\n'  # Do something under Mac OS X platform
+	elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+   		printf 'LINUX\n' # Do something under GNU/Linux platform
+	elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+    		printf 'WINDOWS\n'# Do something under Windows NT platform
+	fi
+
+	printf '========\n'
 }
 
 init_flags() {
