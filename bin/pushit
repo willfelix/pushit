@@ -160,7 +160,7 @@ help() {
 }
 
 version() {
-	printf 'version: 2.3.1\n'
+	printf 'version: 2.3.2\n'
 
 	printf '\n -------------------------\n'
 	printf ' OS NAME: '
@@ -243,11 +243,7 @@ init_options() {
 		esac
 	done
 
-	if [ "$hours" != "" ]; then
-		redmine_time_entry "$number" "$hours"
-		exit 1;
-	fi;
-
+	redmine_time_entry "$number" "$hours"
 	pushit "$number" "$message" "$branch" "$close_message" "$server"
 }
 
