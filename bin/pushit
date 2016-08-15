@@ -12,7 +12,7 @@ config_redmine(){
 	if [ "$token" != "" ]; then
 
 		sed -i "" "s/REDMINE_API_TOKEN=$token/REDMINE_API_TOKEN=$red_token/g" $HOME/.bash_profile
-		
+
 	else
 
 		echo "export REDMINE_API_TOKEN=$red_token" >> ~/.bash_profile
@@ -153,6 +153,10 @@ init_flags() {
 	elif [ "$1" == '-p' -o "$1" == 'pull' ]; then
 		branch="$(git branch | grep '* ' | sed -e 's/* //g')"
 		git pull origin $branch
+		exit 1;
+	elif [ "$1" == '-ps' -o "$1" == 'push' ]; then
+		branch="$(git branch | grep '* ' | sed -e 's/* //g')"
+		git push origin $branch
 		exit 1;
 	elif [ "$1" == '-s' -o "$1" == 'status' ]; then
 		git status
