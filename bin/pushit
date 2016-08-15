@@ -57,13 +57,19 @@ redmine_time_entry() {
 	token=$( get_redmine_token )
 	number=$1
 	hours=$2
+	startDate=$3
 
 	if [ "$number" == "" ] || [ "$hours" == "" ]; then
 		printf "issue_id (required)\nhours (required)\n\n"
 		exit 1;
 	fi;
 
-	curl -v -H "Content-Type: application/xml" -X POST -d "<time_entry><issue_id>$number</issue_id><hours>$hours</hours><activity_id>16</activity_id></time_entry>" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/time_entries.xml
+	xml = "<time_entry><issue_id>$number</issue_id><hours>$hours</hours><activity_id>16</activity_id></time_entry>"
+	if [ "$startDate" != "" ]; then
+		xml = "<time_entry><issue_id>$number</issue_id><hours>$hours</hours><spent_on>$startDate</spent_on><activity_id>16</activity_id></time_entry>"
+	fi;
+
+	curl -v -H "Content-Type: application/xml" -X POST -d "$xml" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/time_entries.xml
 }
 
 # ==============================
@@ -161,7 +167,7 @@ help() {
 }
 
 version() {
-	printf 'version: 2.3.3\n'
+	printf 'version: 2.3.4\n'
 
 	printf '\n -------------------------\n'
 	printf ' OS NAME: '
@@ -215,7 +221,8 @@ init_options() {
 	close_message=''
 	server=''
 	hours=''
-	while getopts ":m:b:n:q:o:t:" arg; do
+	startDate=''
+	while getopts ":m:b:n:q:o:t:d" arg; do
 		case $arg in
 			m)
 				message="$OPTARG"
@@ -237,6 +244,9 @@ init_options() {
 			t)
 				hours=$OPTARG
 				;;
+			d)
+				startDate=$OPTARG
+				;;
 			*)
 				printf "Invalid option. Use -h option to open the help text.\n"
 				exit 1;
@@ -245,7 +255,7 @@ init_options() {
 	done
 
 	if [ "$number" != "" ] && [ "$hours" != "" ]; then
-		redmine_time_entry "$number" "$hours"
+		redmine_time_entry "$number" "$hours" "$startDate"
 	fi;
 
 	pushit "$number" "$message" "$branch" "$close_message" "$server"
