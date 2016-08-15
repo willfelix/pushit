@@ -137,7 +137,7 @@ help() {
 	printf '  %s:\t# CR number.\n' "-n"
 	printf '  %s:\t# git checkout. If this option does not be called, the current branch will be used.\n' "-b"
 	printf '  %s:\t# Close the issue specified by the CR number (Redmine).\n' "-q"
-	printf '  %s:\t# To specific a server origin to update the code (Ex: heroku).\n\n' "-o"
+	printf '  %s:\t# To specific a server origin to update the code (Ex: heroku).\n' "-o"
 	printf '  %s:\t# Insert how many hours you have spent (integer).\n\n' "-t"
 
 	printf 'Flags:\n'
