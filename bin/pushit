@@ -64,9 +64,9 @@ redmine_time_entry() {
 		exit 1;
 	fi;
 
-	xml = "<time_entry><issue_id>$number</issue_id><hours>$hours</hours><activity_id>16</activity_id></time_entry>"
+	xml="<time_entry><issue_id>$number</issue_id><hours>$hours</hours><activity_id>16</activity_id></time_entry>"
 	if [ "$startDate" != "" ]; then
-		xml = "<time_entry><issue_id>$number</issue_id><hours>$hours</hours><spent_on>$startDate</spent_on><activity_id>16</activity_id></time_entry>"
+		xml="<time_entry><issue_id>$number</issue_id><hours>$hours</hours><spent_on>$startDate</spent_on><activity_id>16</activity_id></time_entry>"
 	fi;
 
 	curl -v -H "Content-Type: application/xml" -X POST -d "$xml" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/time_entries.xml
@@ -167,7 +167,7 @@ help() {
 }
 
 version() {
-	printf 'version: 2.3.4\n'
+	printf 'version: 2.3.5\n'
 
 	printf '\n -------------------------\n'
 	printf ' os name: '
@@ -222,7 +222,7 @@ init_options() {
 	server=''
 	hours=''
 	startDate=''
-	while getopts ":m:b:n:q:o:t:d" arg; do
+	while getopts ":m:b:n:q:o:t:d:" arg; do
 		case $arg in
 			m)
 				message="$OPTARG"
