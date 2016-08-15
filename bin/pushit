@@ -160,7 +160,7 @@ help() {
 }
 
 version() {
-	printf 'version: 2.3.0\n'
+	printf 'version: 2.3.1\n'
 
 	printf '\n -------------------------\n'
 	printf ' OS NAME: '
