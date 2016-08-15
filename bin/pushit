@@ -80,6 +80,9 @@ pushit() {
 	if [ "$push" == "y" ] || [ "$push" == "Y" ]; then
 		echo ""
 		git add -A && git commit -m "$message" && git pull origin $branch && git push origin $branch
+		if [ "$5" != "" ]; then
+			git pull $5 master && git push $5 master
+		fi
 
 		if [ "$1" != "" ]; then
 			redmine "$1" "$4"
@@ -115,7 +118,8 @@ help() {
 	printf '  %s:\t# This option is preceded by the commit message.\n' "-m"
 	printf '  %s:\t# CR number.\n' "-n"
 	printf '  %s:\t# git checkout. If this option does not be called, the current branch will be used.\n' "-b"
-	printf '  %s:\t# Close the issue specified by the CR number (Redmine).\n\n' "-q"
+	printf '  %s:\t# Close the issue specified by the CR number (Redmine).\n' "-q"
+	printf '  %s:\t# To specific a server origin to update the code (Ex: heroku).\n\n' "-o"
 
 	printf 'Flags:\n'
 	printf '  %s:\t# Show this help message and quit\n' "-h"
@@ -135,7 +139,20 @@ help() {
 }
 
 version() {
-	printf 'version: 2.1.0\n'
+	printf 'version: 2.2.0\n'
+
+	printf '\n -------------------------\n'
+	printf ' OS NAME: '
+
+	if [ "$(uname)" == "Darwin" ]; then
+  		printf 'MACOSX\n'  # Do something under Mac OS X platform
+	elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+   		printf 'LINUX\n' # Do something under GNU/Linux platform
+	elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+    		printf 'WINDOWS\n'# Do something under Windows NT platform
+	fi
+
+	printf ' -------------------------\n'
 }
 
 init_flags() {
@@ -169,7 +186,8 @@ init_options() {
 	number=''
 	branch=''
 	close_message=''
-	while getopts ":m:b:n:q:" arg; do
+	server=''
+	while getopts ":m:b:n:q:o:" arg; do
 		case $arg in
 			m)
 				message="$OPTARG"
@@ -185,6 +203,9 @@ init_options() {
 			q)
 				close_message=$OPTARG
 				;;
+			o)
+				server=$OPTARG
+				;;
 			*)
 				printf "Invalid option. Use -h option to open the help text.\n"
 				exit 1;
@@ -192,7 +213,7 @@ init_options() {
 		esac
 	done
 
-	pushit "$number" "$message" "$branch" "$close_message"
+	pushit "$number" "$message" "$branch" "$close_message" "$server"
 }
 
 main() {
