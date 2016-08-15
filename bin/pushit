@@ -170,7 +170,7 @@ version() {
 	printf 'version: 2.3.4\n'
 
 	printf '\n -------------------------\n'
-	printf ' OS NAME: '
+	printf ' os name: '
 
 	if [ "$(uname)" == "Darwin" ]; then
   		printf 'MACOSX\n'  # Do something under Mac OS X platform
