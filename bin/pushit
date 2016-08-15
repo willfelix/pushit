@@ -244,7 +244,10 @@ init_options() {
 		esac
 	done
 
-	redmine_time_entry "$number" "$hours"
+	if [ "$number" != "" ] && [ "$hours" != "" ]; then
+		redmine_time_entry "$number" "$hours"
+	fi;
+
 	pushit "$number" "$message" "$branch" "$close_message" "$server"
 }
 
