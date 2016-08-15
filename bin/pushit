@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# ==============================
+#  REDMINE MODULE
+# ==============================
 get_redmine_token(){
 	echo $(grep "^export REDMINE_API_TOKEN=.*" $HOME/.bash_profile | sed -e 's/export REDMINE_API_TOKEN=//g')
 }
@@ -38,7 +41,7 @@ init_redmine() {
 	fi
 }
 
-redmine() {
+redmine_push() {
 	token=$( get_redmine_token )
 	number=$1
 	status=2
@@ -50,6 +53,21 @@ redmine() {
 	curl -v -H "Content-Type: application/json" -X PUT -d "{ \"issue\": { \"id\": \"$number\", \"status_id\": \"$status\", \"notes\": \"$note\" } }" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/issues/$number.json
 }
 
+redmine_time_entry() {
+	token=$( get_redmine_token )
+	number=$1
+	hours=$2
+
+	if [ "$number" == "" ] || [ "$hours" == "" ]; then
+		echo "issue_id (required)\nhours (required)\n"
+	else
+		curl -v -H "Content-Type: application/json" -X POST -d "<time_entry><issue_id>$number</issue_id><hours>$hours</hours></time_entry>" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/time_entries.xml
+	fi;
+}
+
+# ==============================
+#  PUSHIT MODULE
+# ==============================
 pushit() {
 	# Get branch
 	branch=$3
@@ -85,7 +103,7 @@ pushit() {
 		fi
 
 		if [ "$1" != "" ]; then
-			redmine "$1" "$4"
+			redmine_push "$1" "$4"
 		fi
 
 	fi
@@ -120,12 +138,15 @@ help() {
 	printf '  %s:\t# git checkout. If this option does not be called, the current branch will be used.\n' "-b"
 	printf '  %s:\t# Close the issue specified by the CR number (Redmine).\n' "-q"
 	printf '  %s:\t# To specific a server origin to update the code (Ex: heroku).\n\n' "-o"
+	printf '  %s:\t# Insert how many hours you have spent (integer).\n\n' "-t"
 
 	printf 'Flags:\n'
 	printf '  %s:\t# Show this help message and quit\n' "-h"
 	printf "  %s:\t# Pushit's version\n" "-v"
 	printf '  %s:\t# Redmine config: This flag will initialize the Redmine config token.\n' "-r"
+	printf '  %s:\t# git fetch: Fetch all branchs of the repository.\n' "-f"
 	printf '  %s:\t# git pull: Fetch from and integrate with another repository or a local branch.\n' "-p"
+	printf '  %s:\t# git push: Fetch from and integrate with another repository or a local branch.\n' "-ps"
 	printf '  %s:\t# git status: The same as git status.\n\n' "-s"
 
 	printf 'Description:\n'
@@ -139,7 +160,7 @@ help() {
 }
 
 version() {
-	printf 'version: 2.2.0\n'
+	printf 'version: 2.3.0\n'
 
 	printf '\n -------------------------\n'
 	printf ' OS NAME: '
@@ -149,7 +170,7 @@ version() {
 	elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
    		printf 'LINUX\n' # Do something under GNU/Linux platform
 	elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
-    		printf 'WINDOWS\n'# Do something under Windows NT platform
+    		printf 'WINDOWS\n' # Do something under Windows NT platform
 	fi
 
 	printf ' -------------------------\n'
@@ -167,13 +188,18 @@ init_flags() {
 	elif [ "$1" == '-r' -o "$1" == 'redmine' ]; then
 		config_redmine
 		exit 1;
+	elif [ "$1" == '-f' -o "$1" == 'fetch' ]; then
+		git fetch
+		exit 1;
 	elif [ "$1" == '-p' -o "$1" == 'pull' ]; then
 		branch="$(git branch | grep '* ' | sed -e 's/* //g')"
-		git pull origin $branch
+		git add -A && git commit -m "Merge";
+		git pull origin $branch;
 		exit 1;
 	elif [ "$1" == '-ps' -o "$1" == 'push' ]; then
 		branch="$(git branch | grep '* ' | sed -e 's/* //g')"
-		git push origin $branch
+		git add -A && git commit -m "Merge";
+		git push origin $branch;
 		exit 1;
 	elif [ "$1" == '-s' -o "$1" == 'status' ]; then
 		git status
@@ -187,7 +213,8 @@ init_options() {
 	branch=''
 	close_message=''
 	server=''
-	while getopts ":m:b:n:q:o:" arg; do
+	hours=''
+	while getopts ":m:b:n:q:o:t:" arg; do
 		case $arg in
 			m)
 				message="$OPTARG"
@@ -206,12 +233,20 @@ init_options() {
 			o)
 				server=$OPTARG
 				;;
+			t)
+				hours=$OPTARG
+				;;
 			*)
 				printf "Invalid option. Use -h option to open the help text.\n"
 				exit 1;
 				;;
 		esac
 	done
+
+	if [ "$hours" != "" ]; then
+		redmine_time_entry "$number" "$hours"
+		exit 1;
+	fi;
 
 	pushit "$number" "$message" "$branch" "$close_message" "$server"
 }
