@@ -42,6 +42,8 @@ init_redmine() {
 }
 
 redmine_push() {
+	init_redmine
+	
 	token=$( get_redmine_token )
 	number=$1
 	status=2
@@ -54,6 +56,8 @@ redmine_push() {
 }
 
 redmine_time_entry() {
+	init_redmine
+	
 	token=$( get_redmine_token )
 	number=$1
 	hours=$2
@@ -104,15 +108,15 @@ pushit() {
 	read -p "Do you want continue? [y|N] " push
 	if [ "$push" == "y" ] || [ "$push" == "Y" ]; then
 		echo ""
+		
+		if [ "$1" != "" ]; then
+			redmine_push "$1" "$4"
+		fi
+		
 		git add -A && git commit -m "$message" && git pull origin $branch && git push origin $branch
 		if [ "$5" != "" ]; then
 			git pull $5 master && git push $5 master
 		fi
-
-		if [ "$1" != "" ]; then
-			redmine_push "$1" "$4"
-		fi
-
 	fi
 
 	printf "\nFatality...\n"
@@ -263,7 +267,6 @@ init_options() {
 
 main() {
 
-	init_redmine
 	init_flags "$1"
 	init_options "$@"
 
