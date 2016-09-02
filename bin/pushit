@@ -8,7 +8,7 @@ get_redmine_token(){
 }
 
 config_redmine(){
-	printf "You can find your API key on your account page ( /my/account ) when logged in.\n"
+	printf "You can find your API key on yseour account page ( /my/account ) when logged in.\n"
 	read -p "Insert here your REDMINE API TOKEN: " red_token
 
 	token=$( get_redmine_token )
@@ -124,6 +124,8 @@ pushit() {
 }
 
 setup() {
+	init_redmine
+	
 	printf "If you enter 'ctrl + c' will cancel the proccess\n"
 	echo "-------------------------------------------"
 	echo
