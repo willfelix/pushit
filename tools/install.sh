@@ -14,6 +14,8 @@ if [ "$alias" == "" ]; then
 		echo "alias pit='pushit'" >> ~/.zshrc
 	fi
 
+	alias pit='pushit'
+
 fi
 
 echo " ________________________________________ "
