@@ -242,7 +242,7 @@ init_flags() {
 		if [ "$3" != '' ]; then
 			branch="$3"
 		fi
-		
+
 		git add -A && git commit -m "Merge";
 		git pull $server $branch;
 		exit 1;
@@ -255,6 +255,7 @@ init_flags() {
 		branch="$(git branch | grep '* ' | sed -e 's/* //g')"
 		if [ "$3" != '' ]; then
 			branch="$3"
+			echo "BRANCH: $branch "
 		fi
 
 		git add -A && git commit -m "Merge";
