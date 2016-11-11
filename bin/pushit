@@ -1,5 +1,33 @@
 #!/bin/bash
 
+get_alias(){
+	echo $(grep "^alias pit=.*" $HOME/.bash_profile | sed -e 's/alias pit=//g')
+}
+
+uninstall() {
+	sudo rm /usr/local/bin/pushit
+
+	alias=$( get_alias )
+	if [ "$alias" != "" ]; then
+		sed -i "" "s/alias pit='pushit'//g" $HOME/.bash_profile
+		if [ -e ~/.zshrc ]; then
+			sed -i "" "s/alias pit='pushit'//g" $HOME/.zshrc
+		fi
+	fi
+
+	echo ""
+	echo " ____________________ "
+	echo "< Pushit has gone ;( >"
+	echo " -------------------- "
+	echo "        \\   ^__^"
+	echo "         \\  (oo)\\_______"
+	echo "            (__)\\       )\\/\\"
+	echo "                ||----w |"
+	echo "                ||     ||"
+	echo ""
+	echo ""
+}
+
 # ==============================
 #  REDMINE MODULE
 # ==============================
@@ -213,7 +241,6 @@ init_flags() {
 		branch="$(git branch | grep '* ' | sed -e 's/* //g')"
 		git add -A && git commit -m "Merge";
 		git push origin $branch;
-		exit 1;
 	elif [ "$1" == '-s' -o "$1" == 'status' ]; then
 		git status
 		exit 1;
