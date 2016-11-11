@@ -2,6 +2,20 @@ curl https://raw.githubusercontent.com/WillFelix/Pushit/master/bin/pushit > push
 sudo mv pushit /usr/local/bin/
 sudo chmod 777 /usr/local/bin/pushit
 
+get_alias(){
+	echo $(grep "^alias pit=.*" $HOME/.bash_profile | sed -e 's/alias pit=//g')
+}
+
+alias=$( get_alias )
+if [ "$alias" == "" ]; then
+
+	echo "alias pit='pushit'" >> ~/.bash_profile
+	if [ -e ~/.zshrc ]; then
+		echo "alias pit='pushit'" >> ~/.zshrc
+	fi
+
+fi
+
 echo " ________________________________________ "
 echo "< Pushit has been installed successfully >"
 echo " ---------------------------------------- "

@@ -43,7 +43,7 @@ init_redmine() {
 
 redmine_push() {
 	init_redmine
-	
+
 	token=$( get_redmine_token )
 	number=$1
 	status=2
@@ -57,7 +57,7 @@ redmine_push() {
 
 redmine_time_entry() {
 	init_redmine
-	
+
 	token=$( get_redmine_token )
 	number=$1
 	hours=$2
@@ -108,11 +108,11 @@ pushit() {
 	read -p "Do you want continue? [y|N] " push
 	if [ "$push" == "y" ] || [ "$push" == "Y" ]; then
 		echo ""
-		
+
 		if [ "$1" != "" ]; then
 			redmine_push "$1" "$4"
 		fi
-		
+
 		git add -A && git commit -m "$message" && git pull origin $branch && git push origin $branch
 		if [ "$5" != "" ]; then
 			git pull $5 master && git push $5 master
@@ -125,7 +125,7 @@ pushit() {
 
 setup() {
 	init_redmine
-	
+
 	printf "If you enter 'ctrl + c' will cancel the proccess\n"
 	echo "-------------------------------------------"
 	echo
@@ -173,7 +173,7 @@ help() {
 }
 
 version() {
-	printf 'version: 2.3.5\n'
+	printf 'version: 2.3.6\n'
 
 	printf '\n -------------------------\n'
 	printf ' os name: '
