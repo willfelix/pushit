@@ -233,14 +233,33 @@ init_flags() {
 		git fetch
 		exit 1;
 	elif [ "$1" == '-p' -o "$1" == 'pull' ]; then
+		server='origin'
+		if [ "$2" != '' ]; then
+			server="$2"
+		fi
+
 		branch="$(git branch | grep '* ' | sed -e 's/* //g')"
+		if [ "$3" != '' ]; then
+			branch="$3"
+		fi
+		
 		git add -A && git commit -m "Merge";
-		git pull origin $branch;
+		git pull $server $branch;
 		exit 1;
 	elif [ "$1" == '-ps' -o "$1" == 'push' ]; then
+		server='origin'
+		if [ "$2" != '' ]; then
+			server="$2"
+		fi
+
 		branch="$(git branch | grep '* ' | sed -e 's/* //g')"
+		if [ "$3" != '' ]; then
+			branch="$3"
+		fi
+
 		git add -A && git commit -m "Merge";
-		git push origin $branch;
+		git push $server $branch;
+		exit 1
 	elif [ "$1" == '-s' -o "$1" == 'status' ]; then
 		git status
 		exit 1;
@@ -296,7 +315,7 @@ init_options() {
 
 main() {
 
-	init_flags "$1"
+	init_flags "$@"
 	init_options "$@"
 
 	exit 1;
