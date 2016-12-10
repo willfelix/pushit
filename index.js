@@ -52,9 +52,13 @@ program
   .command('pull [server] [branch]')
   .alias('p')
   .action(function (server, branch) {
-    server = server || "origin";
-    branch = branch || "master";
-    default_exec('git add -A && git commit -m "Merge" && git pull ' + server + ' ' + branch);
+
+    my_config(function(origin, master) {
+      server = server || origin;
+      branch = branch || master;
+      default_exec('git add -A && git commit -m "Merge" && git pull ' + server + ' ' + branch);
+    });
+
   });
 
 program
@@ -121,4 +125,18 @@ function default_exec(cmd) {
     if (err) console.error(chalk.red(err));
     console.log(stdout);
   });
+}
+
+function my_config(callback) {
+
+  exec("git branch | grep '* ' | sed -e 's/* //g'", function(err, stdout, stderr) {
+    var current_branch = "master";
+    if (!program.branch) {
+      current_branch = stdout || current_branch;
+      current_branch = current_branch.replace("\n", "");
+    }
+
+    callback("origin", current_branch);
+  });
+
 }
