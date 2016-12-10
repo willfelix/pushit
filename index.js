@@ -59,8 +59,12 @@ program.parse(process.argv);
 function default_exec(cmd) {
   console.info(cmd);
   exec(cmd, function(err, stdout, stderr) {
-    console.error(err);
+    if (err)
+      console.error(chalk.red(err));
+
+    if (stderr)
+      console.error(chalk.yellow(stderr));
+
     console.log(stdout);
-    console.error(stdout);
   });
 }
