@@ -122,8 +122,8 @@ function default_exec(cmd) {
   console.info(chalk.bgBlue("Info: " + cmd + "\n"));
 
   exec(cmd, function(err, stdout, stderr) {
-    if (stderr) console.error(chalk.red(stderr));
     console.log(stdout);
+    if (stderr) console.error(chalk.yellow(stderr));
   });
 }
 
