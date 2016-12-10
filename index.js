@@ -65,9 +65,13 @@ program
   .command('push [server] [branch]')
   .alias('ps')
   .action(function (server, branch) {
-    server = server || "origin";
-    branch = branch || "master";
-    default_exec('git add -A; git commit -m "Merge"; git push ' + server + ' ' + branch);
+
+    my_config(function(origin, master) {
+      server = server || origin;
+      branch = branch || master;
+      default_exec('git add -A; git commit -m "Merge"; git push ' + server + ' ' + branch);
+    });
+    
   });
 
 program
