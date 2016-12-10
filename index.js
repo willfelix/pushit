@@ -39,22 +39,25 @@ program.parse(process.argv);
 */
 (function(){
 
-  var current_branch = exec("git branch | grep -Ei '\*'");
-  console.info(current_branch);
+  exec("git branch | grep -Ei '\*'", function(err, stdout, stderr) {
+    var current_branch = stdout;
+    console.log(stdout);
+    
+    if (program.status) {
+      default_exec('git status');
+    }
 
-  if (program.status) {
-    default_exec('git status');
-  }
+    if (program.fetch) {
+      default_exec('git fetch');
+    }
 
-  if (program.fetch) {
-    default_exec('git fetch');
-  }
+    if (program.message) {
+      var msg = program.message || 'att';
+      var cmd = "git add -A && git commit -m '" + msg + "' && git pull origin master && git push origin master";
+      default_exec(cmd);
+    }
 
-  if (program.message) {
-    var msg = program.message || 'att';
-    var cmd = "git add -A && git commit -m '" + msg + "' && git pull origin master && git push origin master";
-    default_exec(cmd);
-  }
+  });
 
 }());
 
