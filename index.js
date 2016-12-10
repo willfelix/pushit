@@ -39,11 +39,8 @@ program.parse(process.argv);
 */
 (function(){
 
-  var current_branch;
-  exec("git branch | grep -Ei '\*'", function(err, stdout, stderr){
-    current_branch = stdout;
-    console.log(current_branch);
-  });
+  var current_branch = exec("git branch | grep -Ei '\*'");
+  console.info(current_branch);
 
   if (program.status) {
     default_exec('git status');
