@@ -9,26 +9,27 @@ program
   .description('The pushit command is a shortcut for the git commands')
 
 program
-  .option('-m, --message [commit]', '', 'att')
-  .option('-b, --branch [branch]', '', 'current')
+  .option('-m, --message [commit]', '')
+  .option('-b, --branch [branch]', '')
   .option('-n, --number <number>', '')
   .option('-q, --quit <message>', '')
   .option('-o, --origin <server>', '')
   .option('-t, --time <time>', '')
   .option('-d, --date <date>', '')
   .option('-f, --fetch', '')
+  .option('-s, --status', '')
 
-  program
-    .command('pull <server> <branch>')
-    .action(function (server, branch) {
+program
+  .command('pull <server> <branch>')
+  .action(function (server, branch) {
 
-    });
+  });
 
-  program
-    .command('push <server> <branch>')
-    .action(function (server, branch) {
+program
+  .command('push <server> <branch>')
+  .action(function (server, branch) {
 
-    });
+  });
 
 program.parse(process.argv);
 
@@ -38,14 +39,28 @@ program.parse(process.argv);
 */
 (function(){
 
+  if (program.status) {
+    default_exec('git status');
+  }
+
   if (program.fetch) {
-    exec('git status', function(err, stdout, stderr) {
-      console.log(stdout);
-    });
+    default_exec('git fetch');
   }
 
   if (program.message) {
-    console.log(program.message);
+    var msg = program.message || 'att';
+    var cmd = "git add -A && git commit -m '" + msg + "' && git pull origin master && git push origin master";
+    default_exec(cmd);
   }
 
 }());
+
+
+function default_exec(cmd) {
+  console.info(cmd);
+  exec(cmd, function(err, stdout, stderr) {
+    console.error(err);
+    console.log(stdout);
+    console.error(stdout);
+  });
+}
