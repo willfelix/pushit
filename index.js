@@ -104,7 +104,7 @@ program.parse(process.argv);
 
     if (program.message) {
       var msg = program.message || 'att';
-      var cmd = " git add -A && git commit -m '" + msg + "' && git pull " + current_server + " " + current_branch + " && git push " + current_server + " " + current_branch;
+      var cmd = " git add -A && git commit -m '" + msg + "' && git pull " + current_server + " " + current_branch + " & git push " + current_server + " " + current_branch;
       default_exec(cmd);
     }
 
