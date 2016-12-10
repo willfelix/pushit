@@ -10,25 +10,66 @@ program
 
 program
   .option('-m, --message [commit]', '')
-  .option('-b, --branch [branch]', '')
-  .option('-n, --number <number>', '')
-  .option('-q, --quit <message>', '')
   .option('-o, --origin <server>', '')
+
+  .option('-n, --number <number>', '')
+  .option('-c, --close <message>', '')
   .option('-t, --time <time>', '')
   .option('-d, --date <date>', '')
-  .option('-f, --fetch', '')
-  .option('-s, --status', '')
 
 program
-  .command('pull <server> <branch>')
-  .action(function (server, branch) {
+  .command('branch [branch]')
+  .alias('b')
+  .option('-f, --force', 'Force command to execute')
+  .action(function (branch, option) {
+    if (branch) {
+      var cmd = 'git checkout ' + branch;
+      if (option.force) {
+        cmd = 'git checkout -b ' + branch;
+      }
 
+      default_exec(cmd);
+    } else {
+      default_exec('git branch');
+    }
   });
 
 program
-  .command('push <server> <branch>')
-  .action(function (server, branch) {
+  .command('status')
+  .alias('s')
+  .action(function () {
+    default_exec('git status');
+  });
 
+program
+  .command('fetch')
+  .alias('f')
+  .action(function () {
+    default_exec('git fetch');
+  });
+
+program
+  .command('pull [server] [branch]')
+  .alias('p')
+  .action(function (server, branch) {
+    server = server || "origin";
+    branch = branch || "master";
+    default_exec('git add -A && git commit -m "Merge" && git pull ' + server + ' ' + branch);
+  });
+
+program
+  .command('push [server] [branch]')
+  .alias('ps')
+  .action(function (server, branch) {
+    server = server || "origin";
+    branch = branch || "master";
+    default_exec('git add -A && git commit -m "Merge" && git push ' + server + ' ' + branch);
+  });
+
+program
+  .command('*')
+  .action(function(env){
+    console.log(chalk.bgRed('Pushit: command "' + env + '" not found\n'));
   });
 
 program.parse(process.argv);
@@ -38,22 +79,35 @@ program.parse(process.argv);
 * INIT FLAGS
 */
 (function(){
+  if (program.status) {
+    default_exec('git status');
+    return;
+  } else if (program.fetch) {
+    default_exec('git fetch');
+    return;
+  }
 
-  exec("git branch | grep -Ei '\*'", function(err, stdout, stderr) {
-    var current_branch = stdout;
-    console.log(stdout);
-    
-    if (program.status) {
-      default_exec('git status');
-    }
+  var current_server = "origin";
+  if (program.origin) {
+    current_server = program.origin;
+  }
 
-    if (program.fetch) {
-      default_exec('git fetch');
+  var current_branch = "master";
+  if (program.branch) {
+    current_branch = program.branch;
+  }
+
+  exec("git branch | grep '* ' | sed -e 's/* //g'", function(err, stdout, stderr) {
+    if (!program.branch) {
+      current_branch = stdout || current_branch;
     }
 
     if (program.message) {
       var msg = program.message || 'att';
-      var cmd = "git add -A && git commit -m '" + msg + "' && git pull origin master && git push origin master";
+      var cmd = " git add -A && \
+                  git commit -m '" + msg + "' && \
+                  git pull " + current_server + " " + current_branch + " && \
+                  git push " + current_server + " " + current_branch;
       default_exec(cmd);
     }
 
@@ -63,14 +117,10 @@ program.parse(process.argv);
 
 
 function default_exec(cmd) {
-  console.info(cmd);
+  console.info(chalk.bgBlue("Info: " + cmd + "\n"));
+
   exec(cmd, function(err, stdout, stderr) {
-    if (err)
-      console.error(chalk.red(err));
-
-    if (stderr)
-      console.error(chalk.yellow(stderr));
-
+    if (err) console.error(chalk.red(err));
     console.log(stdout);
   });
 }
