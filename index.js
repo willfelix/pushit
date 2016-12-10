@@ -99,7 +99,7 @@ program.parse(process.argv);
 
   exec("git branch | grep '* ' | sed -e 's/* //g'", function(err, stdout, stderr) {
     if (!program.branch) {
-      console.log(stdout.replace("/n", ""));
+      console.log(stdout.replace("\n", ""));
       console.log(stdout);
       current_branch = stdout || current_branch;
     }
