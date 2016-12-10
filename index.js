@@ -45,8 +45,6 @@ program.parse(process.argv);
     console.log(current_branch);
   });
 
-  console.log(current_branch);
-
   if (program.status) {
     default_exec('git status');
   }
