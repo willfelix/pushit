@@ -3,6 +3,7 @@
 const program = require('commander');
 const exec = require('child_process').exec;
 const chalk = require('chalk');
+const pit = "git add -A; git commit -m ${message}; git ${cmd} ${server} ${branch}";
 
 program
   .version('0.0.1')
@@ -56,7 +57,10 @@ program
     my_config(function(origin, master) {
       server = server || origin;
       branch = branch || master;
-      default_exec('git add -A; git commit -m "Merge"; git pull ' + server + ' ' + branch);
+      default_exec(pit.replace("${message}", "Merge")
+                      .replace("${cmd}", "pull")
+                      .replace("${server}", server)
+                      .replace("${branch}", branch));
     });
 
   });
@@ -69,9 +73,12 @@ program
     my_config(function(origin, master) {
       server = server || origin;
       branch = branch || master;
-      default_exec('git add -A; git commit -m "Merge"; git push ' + server + ' ' + branch);
+      default_exec(pit.replace("${message}", "Merge")
+                      .replace("${cmd}", "push")
+                      .replace("${server}", server)
+                      .replace("${branch}", branch));
     });
-    
+
   });
 
 program
