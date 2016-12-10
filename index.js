@@ -56,7 +56,7 @@ program
     my_config(function(origin, master) {
       server = server || origin;
       branch = branch || master;
-      default_exec('git add -A && git commit -m "Merge" || git pull ' + server + ' ' + branch);
+      default_exec('git add -A && git commit -m "Merge"; git pull ' + server + ' ' + branch);
     });
 
   });
@@ -67,7 +67,7 @@ program
   .action(function (server, branch) {
     server = server || "origin";
     branch = branch || "master";
-    default_exec('git add -A && git commit -m "Merge" || git push ' + server + ' ' + branch);
+    default_exec('git add -A && git commit -m "Merge"; git push ' + server + ' ' + branch);
   });
 
 program
