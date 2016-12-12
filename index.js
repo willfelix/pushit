@@ -12,7 +12,7 @@ program
   .description('The pushit command is a shortcut for the git commands')
 
 program
-  .option('-m, --message <commit>', '', "att")
+  .option('-m, --message [message]', '', "att")
   .option('-o, --origin <server>', '')
 
   .option('-n, --number <number>', '')
@@ -52,17 +52,15 @@ program
   });
 
 program
-  .command('message [message]')
+  .command('commit [message]')
   .alias('m')
   .action(function (message) {
 
     my_config(function(origin, master) {
-      var server = origin || "origin";
-      var branch = master || "master";
       default_exec(pit.replace("${message}", message)
                       .replace("${cmd}", "pull")
-                      .replace("${server}", server)
-                      .replace("${branch}", branch) + " git push " + server + " " + branch);
+                      .replace("${server}", origin)
+                      .replace("${branch}", master) + " git push " + origin + " " + master);
     });
 
   });
@@ -71,7 +69,7 @@ program
   .command('pull [server] [branch]')
   .alias('p')
   .action(function (server, branch) {
-    console.log("asdasd");
+
     my_config(function(origin, master) {
       server = server || origin;
       branch = branch || master;
@@ -111,38 +109,30 @@ program.parse(process.argv);
 /**
 * INIT FLAGS
 */
-(function(){
-  if (program.origin) {
-    current_server = program.origin;
-  }
-  if (program.branch) {
-    current_branch = program.branch;
-  }
-  if (program.message) {
-    program.message = program.message;
-  }
+if (program.origin) {
+  current_server = program.origin;
+}
+if (program.branch) {
+  current_branch = program.branch;
+}
 
-  my_config(function(server, branch) {
-    if (!program.branch) {
-      current_branch = program.branch || branch;
-      current_branch = current_branch.replace("\n", "");
-    }
-  });
-
-}());
+my_config(function(server, branch) {
+  if (!program.branch) {
+    current_branch = program.branch || branch;
+    current_branch = current_branch.replace("\n", "");
+  }
+});
 
 
 function default_exec(cmd) {
   console.info(chalk.bgBlue("Info: " + cmd + "\n"));
-
   exec(cmd, function(err, stdout, stderr) {
-    console.log(stdout);
-    if (stderr) console.error(chalk.yellow(stderr));
+      console.info(stdout);
+      if (stderr) console.error(chalk.yellow(stderr));
   });
 }
 
 function my_config(callback) {
-
   exec("git branch | grep '* ' | sed -e 's/* //g'", function(err, stdout, stderr) {
     var branch = "master";
     if (!program.branch) {
