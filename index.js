@@ -6,14 +6,13 @@ const chalk = require('chalk');
 const pit = "git add -A; git commit -m '${message}'; git ${cmd} ${server} ${branch};";
 var current_branch = "master";
 var current_server = "origin";
-var current_message = "att";
 
 program
   .version('0.0.1')
   .description('The pushit command is a shortcut for the git commands')
 
 program
-  .option('-m, --message [commit]', '')
+  .option('-m, --message <commit>', '', "att")
   .option('-o, --origin <server>', '')
 
   .option('-n, --number <number>', '')
@@ -72,11 +71,11 @@ program
   .command('pull [server] [branch]')
   .alias('p')
   .action(function (server, branch) {
-
+    console.log("asdasd");
     my_config(function(origin, master) {
       server = server || origin;
       branch = branch || master;
-      default_exec(pit.replace("${message}", current_message)
+      default_exec(pit.replace("${message}", program.message)
                       .replace("${cmd}", "pull")
                       .replace("${server}", server)
                       .replace("${branch}", branch));
@@ -92,7 +91,7 @@ program
     my_config(function(origin, master) {
       server = server || origin;
       branch = branch || master;
-      default_exec(pit.replace("${message}", current_message)
+      default_exec(pit.replace("${message}", program.message)
                       .replace("${cmd}", "push")
                       .replace("${server}", server)
                       .replace("${branch}", branch));
@@ -120,7 +119,7 @@ program.parse(process.argv);
     current_branch = program.branch;
   }
   if (program.message) {
-    current_message = program.message;
+    program.message = program.message;
   }
 
   my_config(function(server, branch) {
