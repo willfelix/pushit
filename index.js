@@ -3,7 +3,9 @@
 const program = require('commander');
 const exec = require('child_process').exec;
 const chalk = require('chalk');
-const pit = "git add -A; git commit -m ${message}; git ${cmd} ${server} ${branch}";
+const pit = "git add -A; git commit -m '${message}'; git ${cmd} ${server} ${branch};";
+var current_branch = "master";
+var current_server = "origin";
 
 program
   .version('0.0.1')
@@ -47,6 +49,22 @@ program
   .alias('f')
   .action(function () {
     default_exec('git fetch');
+  });
+
+program
+  .command('message [message]')
+  .alias('m')
+  .action(function (message) {
+
+    my_config(function(origin, master) {
+      var server = origin || "origin";
+      var branch = master || "master";
+      default_exec(pit.replace("${message}", message)
+                      .replace("${cmd}", "pull")
+                      .replace("${server}", server)
+                      .replace("${branch}", branch) + " git push " + server + " " + branch);
+    });
+
   });
 
 program
@@ -102,19 +120,16 @@ program.parse(process.argv);
     return;
   }
 
-  var current_server = "origin";
   if (program.origin) {
     current_server = program.origin;
   }
-
-  var current_branch = "master";
   if (program.branch) {
     current_branch = program.branch;
   }
 
-  exec("git branch | grep '* ' | sed -e 's/* //g'", function(err, stdout, stderr) {
+  my_config(function(server, branch) {
     if (!program.branch) {
-      current_branch = stdout || current_branch;
+      current_branch = program.branch || branch;
       current_branch = current_branch.replace("\n", "");
     }
 
@@ -141,13 +156,14 @@ function default_exec(cmd) {
 function my_config(callback) {
 
   exec("git branch | grep '* ' | sed -e 's/* //g'", function(err, stdout, stderr) {
-    var current_branch = "master";
+    var branch = "master";
     if (!program.branch) {
-      current_branch = stdout || current_branch;
-      current_branch = current_branch.replace("\n", "");
+      branch = stdout || branch;
+      branch = branch.replace("\n", "");
     }
 
-    callback("origin", current_branch);
+    var server = current_server || "origin";
+    callback(server, branch);
   });
 
 }
