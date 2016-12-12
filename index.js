@@ -6,6 +6,7 @@ const chalk = require('chalk');
 const pit = "git add -A; git commit -m '${message}'; git ${cmd} ${server} ${branch};";
 var current_branch = "master";
 var current_server = "origin";
+var current_message = "att";
 
 program
   .version('0.0.1')
@@ -75,7 +76,7 @@ program
     my_config(function(origin, master) {
       server = server || origin;
       branch = branch || master;
-      default_exec(pit.replace("${message}", "Merge")
+      default_exec(pit.replace("${message}", current_message)
                       .replace("${cmd}", "pull")
                       .replace("${server}", server)
                       .replace("${branch}", branch));
@@ -91,7 +92,7 @@ program
     my_config(function(origin, master) {
       server = server || origin;
       branch = branch || master;
-      default_exec(pit.replace("${message}", "Merge")
+      default_exec(pit.replace("${message}", current_message)
                       .replace("${cmd}", "push")
                       .replace("${server}", server)
                       .replace("${branch}", branch));
@@ -112,19 +113,14 @@ program.parse(process.argv);
 * INIT FLAGS
 */
 (function(){
-  if (program.status) {
-    default_exec('git status');
-    return;
-  } else if (program.fetch) {
-    default_exec('git fetch');
-    return;
-  }
-
   if (program.origin) {
     current_server = program.origin;
   }
   if (program.branch) {
     current_branch = program.branch;
+  }
+  if (program.message) {
+    current_message = program.message;
   }
 
   my_config(function(server, branch) {
@@ -132,13 +128,6 @@ program.parse(process.argv);
       current_branch = program.branch || branch;
       current_branch = current_branch.replace("\n", "");
     }
-
-    if (program.message) {
-      var msg = program.message || 'att';
-      var cmd = " git add -A; git commit -m '" + msg + "'; git pull " + current_server + " " + current_branch + " && git push " + current_server + " " + current_branch;
-      default_exec(cmd);
-    }
-
   });
 
 }());
