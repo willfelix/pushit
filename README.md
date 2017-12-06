@@ -25,8 +25,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/WillFelix/Pushit/master/to
 sh -c "$(wget https://raw.githubusercontent.com/WillFelix/Pushit/master/tools/install.sh -O -)"
 ```
 
----
-
 ## Usage
 *pushit|pit [options] [value]*
 
@@ -46,5 +44,3 @@ sh -c "$(wget https://raw.githubusercontent.com/WillFelix/Pushit/master/tools/in
 
 ## Example
 *pushit -n 1532 -m 'Adjustments to the search method in productDAO'*<br />
-
----
