@@ -9,6 +9,7 @@ Its the junction of "git add -A && git commit -m [message] && git pull origin [b
 * `git` should be installed
 * [`curl`](https://curl.haxx.se/download.html) or [`wget`](http://gnuwin32.sourceforge.net/packages/wget.htm) should be installed
 
+
 ## Installing
 
 Pushit is installed by running one of the following commands in your terminal. You can install this via the command-line with either `curl` or `wget`.
@@ -16,14 +17,15 @@ Pushit is installed by running one of the following commands in your terminal. Y
 #### via curl
 
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/WillFelix/Pushit/master/tools/install.sh)"
+$ sh -c "$(curl -fsSL https://raw.githubusercontent.com/WillFelix/Pushit/master/tools/install.sh)"
 ```
 
 #### via wget
 
 ```shell
-sh -c "$(wget https://raw.githubusercontent.com/WillFelix/Pushit/master/tools/install.sh -O -)"
+$ sh -c "$(wget https://raw.githubusercontent.com/WillFelix/Pushit/master/tools/install.sh -O -)"
 ```
+
 
 ## Usage
 *pushit|pit [options] [value]*
@@ -33,7 +35,7 @@ sh -c "$(wget https://raw.githubusercontent.com/WillFelix/Pushit/master/tools/in
 -n: *CR number.*<br />
 -b: *git checkout. If this option does not be called, the current branch will be used.*<br />
 -q: *Close the issue specified by the CR number (Redmine).*<br />
-<br />
+
 #### Flags:
 -h: *Show this help message and quit*<br />
 -v: *Pushit's version*<br />
@@ -43,4 +45,7 @@ sh -c "$(wget https://raw.githubusercontent.com/WillFelix/Pushit/master/tools/in
 <br />
 
 ## Example
-*pushit -n 1532 -m 'Adjustments to the search method in productDAO'*<br />
+```shell
+$ pushit -n 1532 -m 'Adjustments to the search method in productDAO'
+$ pit -v
+```
