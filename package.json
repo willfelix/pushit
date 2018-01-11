@@ -25,5 +25,9 @@
   "bugs": {
     "url": "https://github.com/WillFelix/Pushit/issues"
   },
-  "homepage": "https://github.com/WillFelix/Pushit#readme"
+  "homepage": "https://github.com/WillFelix/Pushit#readme",
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "commander": "^2.13.0"
+  }
 }
