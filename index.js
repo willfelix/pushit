@@ -91,13 +91,15 @@ program
 	.parse(process.argv);
 
 (function processOptions() {
+	let hasMessage = process.argv.includes("-m") || process.argv.includes("--message");
+
 	// Set origin server
 	if (program.origin) {
 		current_server = program.origin;
+		hasMessage = true;
 	}
 
 	// Commit
-	let hasMessage = process.argv.includes("-m") || process.argv.includes("--message");
 	if (hasMessage) {
 		let msg = pit.replace("${message}", program.message)
 					.replace("${cmd}", "pull")
