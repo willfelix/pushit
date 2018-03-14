@@ -56,7 +56,7 @@ program
   .alias('m')
   .action(function (message) {
 
-    my_config(function(origin, master) {
+    init(function(origin, master) {
       default_exec(pit.replace("${message}", message)
                       .replace("${cmd}", "pull")
                       .replace("${server}", origin)
@@ -70,7 +70,7 @@ program
   .alias('p')
   .action(function (server, branch) {
 
-    my_config(function(origin, master) {
+    init(function(origin, master) {
       server = server || origin;
       branch = branch || master;
       default_exec(pit.replace("${message}", program.message)
@@ -82,26 +82,24 @@ program
   });
 
 program
-  .command('push [server] [branch]')
-  .alias('ps')
-  .action(function (server, branch) {
-
-    my_config(function(origin, master) {
-      server = server || origin;
-      branch = branch || master;
-      default_exec(pit.replace("${message}", program.message)
-                      .replace("${cmd}", "push")
-                      .replace("${server}", server)
-                      .replace("${branch}", branch));
-    });
-
-  });
+	.command('push [server] [branch]')
+	.alias('ps')
+	.action((server, branch) => {
+		init((origin, master) => {
+			server = server || origin;
+			branch = branch || master;
+			default_exec(pit.replace("${message}", program.message)
+				.replace("${cmd}", "push")
+				.replace("${server}", server)
+				.replace("${branch}", branch));
+		});
+	});
 
 program
-  .command('*')
-  .action(function(env){
-    console.log(chalk.bgRed('Pushit: command "' + env + '" not found\n'));
-  });
+	.command('*')
+	.action((env) => {
+    	console.log(chalk.bgRed('Pushit: command "' + env + '" not found\n'));
+  	});
 
 program.parse(process.argv);
 
@@ -109,38 +107,26 @@ program.parse(process.argv);
 /**
 * INIT FLAGS
 */
-if (program.origin) {
-    current_server = program.origin;
-}
-if (program.branch) {
-    current_branch = program.branch;
-}
 
-my_config((server, branch) => {
-    if (!program.branch) {
-        current_branch = (program.branch || branch).replace("\n", "");
-    }
-});
-
+init((server, branch) => current_branch = (program.branch || branch).replace("\n", ""));
 
 function default_exec(cmd) {
-  console.info(chalk.bgBlue("Info: " + cmd + "\n"));
-  exec(cmd, (err, stdout, stderr) => {
-      console.info(stdout);
-      if (stderr) console.error(chalk.yellow(stderr));
-  });
+	console.info(chalk.bgBlue("Info: " + cmd + "\n"));
+	exec(cmd, (err, stdout, stderr) => {
+		console.info(stdout);
+		if (stderr) console.error(chalk.yellow(stderr));
+	});
 }
 
-function my_config(callback) {
-  exec("git branch | grep '* ' | sed -e 's/* //g'", (err, stdout, stderr) => {
-    var branch = "master";
-    if (!program.branch) {
-      branch = stdout || branch;
-      branch = branch.replace("\n", "");
-    }
+function init(callback) {
+	exec("git branch | grep '* ' | sed -e 's/* //g'", (err, stdout, stderr) => {
+		var branch = "master";
+		if (!program.branch) {
+			branch = stdout || branch;
+			branch = branch.replace("\n", "");
+		}
 
-    var server = current_server || "origin";
-    callback(server, branch);
-  });
-
+		var server = current_server || "origin";
+		callback(server, branch);
+	});
 }
