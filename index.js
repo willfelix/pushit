@@ -9,33 +9,24 @@ var current_server = "origin";
 
 program
   .version('0.0.1')
-  .description('The pushit command is a shortcut for the git commands')
+  .description('The pushit command is a shortcut for the git commands');
 
 program
-  .option('-m, --message [message]', '', "att")
-  .option('-o, --origin <server>', '')
+	.command('branch [branch]')
+	.alias('b')
+	.option('-f, --force', 'Force command to execute')
+	.action(function (branch, option) {
+		if (branch) {
+			var cmd = 'git checkout ' + branch;
+			if (option.force) {
+				cmd = 'git checkout -b ' + branch;
+			}
 
-  .option('-n, --number <number>', '')
-  .option('-c, --close <message>', '')
-  .option('-t, --time <time>', '')
-  .option('-d, --date <date>', '')
-
-program
-  .command('branch [branch]')
-  .alias('b')
-  .option('-f, --force', 'Force command to execute')
-  .action(function (branch, option) {
-    if (branch) {
-      var cmd = 'git checkout ' + branch;
-      if (option.force) {
-        cmd = 'git checkout -b ' + branch;
-      }
-
-      default_exec(cmd);
-    } else {
-      default_exec('git branch');
-    }
-  });
+			default_exec(cmd);
+		} else {
+			default_exec('git branch');
+		}
+	});
 
 program
   .command('status')
@@ -51,19 +42,6 @@ program
     default_exec('git fetch');
   });
 
-program
-  .command('commit [message]')
-  .alias('m')
-  .action(function (message) {
-
-    init(function(origin, master) {
-      default_exec(pit.replace("${message}", message)
-                      .replace("${cmd}", "pull")
-                      .replace("${server}", origin)
-                      .replace("${branch}", master) + " git push " + origin + " " + master);
-    });
-
-  });
 
 program
   .command('pull [server] [branch]')
@@ -101,32 +79,51 @@ program
     	console.log(chalk.bgRed('Pushit: command "' + env + '" not found\n'));
   	});
 
-program.parse(process.argv);
 
+// Pushit Options
+program
+	.option('-m, --message [message]', '', "att")
+	.option('-o, --origin <server>', '')
+	.option('-n, --number <number>', '')
+	.option('-c, --close <message>', '')
+	.option('-t, --time <time>', '')
+	.option('-d, --date <date>', '')
+	.parse(process.argv);
+
+(function processOptions() {
+	// Set origin server
+	if (program.origin) {
+		current_server = program.origin;
+	}
+
+	// Commit
+	let hasMessage = process.argv.includes("-m") || process.argv.includes("--message");
+	if (hasMessage) {
+		let msg = pit.replace("${message}", program.message)
+					.replace("${cmd}", "pull")
+					.replace("${server}", current_server)
+					.replace("${branch}", current_branch) + " git push " + current_server + " " + current_branch;
+
+		default_exec(msg);
+	}
+})();
 
 /**
 * INIT FLAGS
 */
 
-init((server, branch) => current_branch = (program.branch || branch).replace("\n", ""));
-
 function default_exec(cmd) {
 	console.info(chalk.bgBlue("Info: " + cmd + "\n"));
+
 	exec(cmd, (err, stdout, stderr) => {
 		console.info(stdout);
 		if (stderr) console.error(chalk.yellow(stderr));
 	});
 }
 
-function init(callback) {
+(function () {
 	exec("git branch | grep '* ' | sed -e 's/* //g'", (err, stdout, stderr) => {
-		var branch = "master";
-		if (!program.branch) {
-			branch = stdout || branch;
-			branch = branch.replace("\n", "");
-		}
-
-		var server = current_server || "origin";
-		callback(server, branch);
+		current_branch = (stdout || "master").replace("\n", "");
+		current_server = (program.origin || "origin").replace("\n", "");;
 	});
-}
+})();
