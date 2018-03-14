@@ -59,35 +59,21 @@ program
 
   });
 
-program
-	.command('push [server] [branch]')
-	.alias('ps')
-	.action((server, branch) => {
-		init((origin, master) => {
-			server = server || origin;
-			branch = branch || master;
-			default_exec(pit.replace("${message}", program.message)
-				.replace("${cmd}", "push")
-				.replace("${server}", server)
-				.replace("${branch}", branch));
-		});
-	});
-
-program
-	.command('*')
-	.action((env) => {
-    	console.log(chalk.bgRed('Pushit: command "' + env + '" not found\n'));
-  	});
+program.command('*').action((env) => console.log(chalk.bgRed('Pushit: command "' + env + '" not found\n')));
 
 
 // Pushit Options
 program
 	.option('-m, --message [message]', '', "att")
 	.option('-o, --origin <server>', '')
-	.option('-n, --number <number>', '')
-	.option('-c, --close <message>', '')
-	.option('-t, --time <time>', '')
-	.option('-d, --date <date>', '')
+	.option('-f, --fetch', '')
+	.option('-s, --status', '')
+	.option('-l, --log', '')
+	.option('-p, --pull', '')
+	// .option('-n, --number <number>', '')
+	// .option('-c, --close <message>', '')
+	// .option('-t, --time <time>', '')
+	// .option('-d, --date <date>', '')
 	.parse(process.argv);
 
 (function processOptions() {
@@ -107,6 +93,26 @@ program
 					.replace("${branch}", current_branch) + " git push " + current_server + " " + current_branch;
 
 		default_exec(msg);
+	}
+
+	// Status
+	if (program.status) {
+		default_exec('git status');
+	}
+
+	// Fetch
+	if (program.fetch) {
+		default_exec('git fetch');
+	}
+
+	// Log
+	if (program.log) {
+		default_exec('git log');
+	}
+
+	// Pull
+	if (program.pull) {
+		default_exec(`git pull ${current_server} ${current_branch}`);
 	}
 })();
 
