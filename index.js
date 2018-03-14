@@ -110,30 +110,29 @@ program.parse(process.argv);
 * INIT FLAGS
 */
 if (program.origin) {
-  current_server = program.origin;
+    current_server = program.origin;
 }
 if (program.branch) {
-  current_branch = program.branch;
+    current_branch = program.branch;
 }
 
-my_config(function(server, branch) {
-  if (!program.branch) {
-    current_branch = program.branch || branch;
-    current_branch = current_branch.replace("\n", "");
-  }
+my_config((server, branch) => {
+    if (!program.branch) {
+        current_branch = (program.branch || branch).replace("\n", "");
+    }
 });
 
 
 function default_exec(cmd) {
   console.info(chalk.bgBlue("Info: " + cmd + "\n"));
-  exec(cmd, function(err, stdout, stderr) {
+  exec(cmd, (err, stdout, stderr) => {
       console.info(stdout);
       if (stderr) console.error(chalk.yellow(stderr));
   });
 }
 
 function my_config(callback) {
-  exec("git branch | grep '* ' | sed -e 's/* //g'", function(err, stdout, stderr) {
+  exec("git branch | grep '* ' | sed -e 's/* //g'", (err, stdout, stderr) => {
     var branch = "master";
     if (!program.branch) {
       branch = stdout || branch;
