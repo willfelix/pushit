@@ -45,16 +45,6 @@ function processOptions() {
 		current_server = program.origin;
 	}
 
-	// Commit and Push
-	if (program.message) {
-		let msg = pit.replace("${message}", program.message)
-					.replace("${cmd}", "pull")
-					.replace("${server}", current_server)
-					.replace("${branch}", current_branch) + " git push " + current_server + " " + current_branch;
-
-		default_exec(msg);
-	}
-
 	// Status
 	if (program.status) {
 		default_exec('git status');
@@ -73,6 +63,16 @@ function processOptions() {
 	// Pull
 	if (program.pull) {
 		default_exec(`git pull ${current_server} ${current_branch}`);
+	}
+
+	// Commit and Push
+	if (program.message) {
+		let msg = pit.replace("${message}", program.message)
+					.replace("${cmd}", "pull")
+					.replace("${server}", current_server)
+					.replace("${branch}", current_branch) + " git push " + current_server + " " + current_branch;
+
+		default_exec(msg);
 	}
 }
 
