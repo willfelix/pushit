@@ -1,33 +1,35 @@
 {
-  "name": "pushit",
-  "version": "0.0.1",
-  "description": "The pushit command is a shortcut for the git commands",
-  "preferGlobal": true,
-  "bin": {
-    "pushitn": "index.js",
-    "pitn": "index.js"
-  },
-  "scripts": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/WillFelix/Pushit.git"
-  },
-  "keywords": [
-    "pit",
-    "pushit",
-    "git",
-    "redmine"
-  ],
-  "author": "Will Felix <willfelix93@gmail.com>",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/WillFelix/Pushit/issues"
-  },
-  "homepage": "https://github.com/WillFelix/Pushit#readme",
-  "dependencies": {
-    "chalk": "^2.3.0",
-    "commander": "^2.13.0"
-  }
+	"name": "pushit",
+	"version": "0.0.1",
+	"description": "The pushit command is a shortcut for the git commands",
+	"preferGlobal": true,
+	"bin": {
+		"pushitn": "bin/pushit.js",
+		"pitn": "bin/pushit.js"
+	},
+	"scripts": {
+		"test": "test",
+		"start": "node bin/pushit.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/WillFelix/Pushit.git"
+	},
+	"keywords": [
+		"pit",
+		"pushit",
+		"git",
+		"redmine"
+	],
+	"author": "Will Felix <willfelix93@gmail.com>",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/WillFelix/Pushit/issues"
+	},
+	"homepage": "https://github.com/WillFelix/Pushit#readme",
+	"dependencies": {
+		"chalk": "^2.3.0",
+		"commander": "^2.13.0",
+		"prompt": "^1.0.0"
+	}
 }
