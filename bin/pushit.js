@@ -20,11 +20,11 @@ let current_branch, current_server;
 
 
 program
-	.version('0.0.1')
+	.version('0.0.1', '-v, --version')
 	.description('The pushit command is a shortcut for the git commands');
 
 program
-	.command("redmine", "vamo ver oq vai fazer")
+	.command('redmine [name]', "vamo ver oq vai fazer")
 	.command('*').action((env) => console.log(chalk.bgRed('Pushit: command "' + env + '" not found\n')));
 
 program
@@ -33,8 +33,9 @@ program
 	.option('-s, --status', '')
 	.option('-f, --fetch', '')
 	.option('-l, --log', '')
-	.option('-p, --pull', '')
-	.parse(process.argv);
+	.option('-p, --pull', '');
+
+program.parse(process.argv);
 
 
 
@@ -45,8 +46,7 @@ function processOptions() {
 	}
 
 	// Commit and Push
-	let hasMessage = process.argv.includes("-m") || process.argv.includes("--message");
-	if (hasMessage) {
+	if (program.message) {
 		let msg = pit.replace("${message}", program.message)
 					.replace("${cmd}", "pull")
 					.replace("${server}", current_server)
