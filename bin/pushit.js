@@ -1,9 +1,9 @@
 #! /usr/bin/env node
 
-const default_exec = require('../tools/default_exec').default_exec;
-const program = require('commander');
 const chalk = require('chalk');
+const program = require('commander');
 const questions = require('questions');
+const default_exec = require('../tools/default_exec').default_exec;
 const pit = "git add -A; git commit -m '${message}'; git ${cmd} ${server} ${branch};";
 
 // Init config variables
@@ -36,8 +36,6 @@ program
 	.option('-p, --pull', '');
 
 program.parse(process.argv);
-
-
 
 function processOptions() {
 
