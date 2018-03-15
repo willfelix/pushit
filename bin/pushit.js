@@ -1,15 +1,14 @@
 #! /usr/bin/env node
 
+const default_exec = require('../tools/default_exec').default_exec;
 const program = require('commander');
-const exec = require('child_process').exec;
 const chalk = require('chalk');
 const pit = "git add -A; git commit -m '${message}'; git ${cmd} ${server} ${branch};";
-
 
 // Init config variables
 let current_branch, current_server;
 (function () {
-	exec("git branch | grep '* ' | sed -e 's/* //g'", (err, stdout, stderr) => {
+	default_exec("git branch | grep '* ' | sed -e 's/* //g'", (stdout) => {
 		current_branch = (stdout || "master").replace("\n", "");
 		current_server = (program.origin || "origin").replace("\n", "");;
 
@@ -17,14 +16,14 @@ let current_branch, current_server;
 	});
 })();
 
-
-
 program
 	.version('0.0.1', '-v, --version')
 	.description('The pushit command is a shortcut for the git commands');
 
 program
-	.command('redmine [name]', "vamo ver oq vai fazer")
+	.command('redmine', "redmine plugin integration")
+	.command('github', "github plugin integration")
+	.command('gitlab', "gitlab plugin integration")
 	.command('*').action((env) => console.log(chalk.bgRed('Pushit: command "' + env + '" not found\n')));
 
 program
@@ -40,6 +39,7 @@ program.parse(process.argv);
 
 
 function processOptions() {
+
 	// Origin
 	if (program.origin) {
 		current_server = program.origin;
@@ -74,13 +74,4 @@ function processOptions() {
 
 		default_exec(msg);
 	}
-}
-
-function default_exec(cmd) {
-	console.info(chalk.bgBlue("Info: " + cmd + "\n"));
-
-	exec(cmd, (err, stdout, stderr) => {
-		console.info(stdout);
-		if (stderr) console.error(chalk.yellow(stderr));
-	});
 }

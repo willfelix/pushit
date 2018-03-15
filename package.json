@@ -30,6 +30,8 @@
 	"dependencies": {
 		"chalk": "^2.3.0",
 		"commander": "^2.13.0",
-		"prompt": "^1.0.0"
+		"path": "^0.12.7",
+		"prompt": "^1.0.0",
+		"questions": "0.0.6"
 	}
 }

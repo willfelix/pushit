@@ -1,69 +1,78 @@
-const exec = require('child_process').exec;
-const prompt = require('prompt');
-const path = require('path');
+const default_exec = require('../tools/default_exec').default_exec;
+const questions = require('questions');
+const chalk = require('chalk');
+const fs = require('fs');
 
-function get_redmine_token(){
+function get_redmine_token(callback){
 	let cmd = `grep "^export REDMINE_API_TOKEN=.*" $HOME/.bash_profile | sed -e 's/export REDMINE_API_TOKEN=//g'`;
-	default_exec(cmd);
+	default_exec(cmd, callback);
 }
 
 function config_redmine(){
-	console.info("You can find your API key on yseour account page ( /my/account ) when logged in.\n");
-	prompt.start();
-	prompt.get('token', (err, result) => {
-	    console.log('Token: ' + result.token);
-		let my_token = get_redmine_token();
-		let input_token = result.token;
+	console.info("\nYou can find your API key on your account page ( /my/account ) when logged in.");
+	questions.askMany({
+		url: { info: 'Insert the redmine URL here' },
+		input_token: { info: 'Insert your redmine token here' },
+	}, (result) => {
 
-		if (my_token) {
+		let { url, input_token } = result;
 
-			let cmd = 'sed -i "" `s/REDMINE_API_TOKEN=${my_token}/REDMINE_API_TOKEN=${input_token}/g` $HOME/.bash_profile';
-			default_exec(cmd);
+		get_redmine_token((my_token) => {
+			if (my_token) {
 
-		} else {
+				let cmd = 'sed -i "" `s/REDMINE_API_TOKEN=${my_token}/REDMINE_API_TOKEN=${input_token}/g` $HOME/.bash_profile';
+				default_exec(cmd, false);
 
-			default_exec("echo `export REDMINE_API_TOKEN=${input_token}` >> ~/.bash_profile");
-			path.exists('~/.zshrc', (exists) => {
-				if (exists) {
-					default_exec("echo `export REDMINE_API_TOKEN=${input_token}` >> ~/.zshrc");
-				}
-			});
+			} else {
 
-		}
+				default_exec("echo `export REDMINE_API_TOKEN=${input_token}` >> $HOME/.bash_profile", false);
+				fs.exists('$HOME/.zshrc', (exists) => {
+					if (exists) {
+						default_exec("echo `export REDMINE_API_TOKEN=${input_token}` >> $HOME/.zshrc", false);
+					}
+				});
+
+			}
+
+			let msg = "\nOK dude. Now you can update any issue passing the CR number by the pushit.";
+			console.info(chalk.bgBlue(msg));
+		});
+
 	});
-
-	console.info("OK dude. Now you can update any issue passing the CR number by the pushit");
 }
 
 function init_redmine() {
-	let token = get_redmine_token();
-	if (!token) {
-
-		prompt.start();
-		prompt.get('token', (err, result) => {
-		read -p "Redmine API TOKEN is missing. Do you wanna set it up now? [y|N] " red
-		if [ "$red" == "y" ] || [ "$red" == "Y" ] {
-			config_redmine();
+	get_redmine_token((token) => {
+		if (!token) {
+			questions.askOne({ info: 'Redmine API TOKEN is missing. Do you wanna set it up now? [y|n]' }, (red) => {
+				if (red == "y" || red == "Y") config_redmine();
+				console.info("\n");
+			});
 		}
-
-		console.info("\n");
-	}
+	});
 }
 
-// function redmine_push() {
-// 	init_redmine
-//
-// 	token=$( get_redmine_token )
-// 	number=$1
-// 	status=2
-// 	note=''
-//  	if [ "$2" != "" ]; then
-// 		status=32
-// 		note="$2"
-// 	fi
-// 	curl -v -H "Content-Type: application/json" -X PUT -d "{ \"issue\": { \"id\": \"$number\", \"status_id\": \"$status\", \"notes\": \"$note\" } }" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/issues/$number.json
-// }
-//
+function redmine_push() {
+	get_redmine_token((token) => {
+		let number = $1;
+		let status = 2;
+		let note = '';
+	 	if ("$2" != "") {
+			status = 32;
+			note = "$2";
+		}
+
+		curl(`http://suporte.cers.com.br/issues/${number}.json`, {
+			HTTPHEADERS: {
+				"Content-Type": "application/json",
+				"X-Redmine-API-Key": token
+			},
+			POSTFIELDS: { issue: { id: number, status_id: status, notes: note } },
+			PUT: true
+		});
+	});
+}
+
 // function redmine_time_entry() {
 // 	init_redmine
 //
@@ -84,14 +93,3 @@ function init_redmine() {
 //
 // 	curl -v -H "Content-Type: application/xml" -X POST -d "$xml" -H "X-Redmine-API-Key: $token" http://suporte.cers.com.br/time_entries.xml
 // }
-
-
-
-function default_exec(cmd) {
-	console.info(chalk.bgBlue("Info: " + cmd + "\n"));
-
-	exec(cmd, (err, stdout, stderr) => {
-		console.info(stdout);
-		if (stderr) console.error(chalk.yellow(stderr));
-	});
-}
