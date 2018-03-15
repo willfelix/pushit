@@ -20,7 +20,7 @@ module.exports = {
 			// else
 			if (is4Log) console.info(chalk.bgBlue("\nCommand:\n-> " + cmd + "\n"));
 
-			console.log(stdout);
+			if (stdout) console.log(stdout);
 		});
 	}
 
