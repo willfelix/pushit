@@ -3,6 +3,7 @@
 const default_exec = require('../tools/default_exec').default_exec;
 const program = require('commander');
 const chalk = require('chalk');
+const questions = require('questions');
 const pit = "git add -A; git commit -m '${message}'; git ${cmd} ${server} ${branch};";
 
 // Init config variables
@@ -67,11 +68,20 @@ function processOptions() {
 
 	// Commit and Push
 	if (program.message) {
-		let msg = pit.replace("${message}", program.message)
-					.replace("${cmd}", "pull")
-					.replace("${server}", current_server)
-					.replace("${branch}", current_branch) + " git push " + current_server + " " + current_branch;
 
-		default_exec(msg);
+		console.log(`\n:: Commit: ${program.message}`);
+		console.log(`:: Branch: ${current_branch}\n`);
+		questions.askOne({ info: 'Do you want continue? [y|N]', required: false }, (red) => {
+			if (red == "y" || red == "Y") {
+
+				let msg = pit.replace("${message}", program.message)
+							.replace("${cmd}", "pull")
+							.replace("${server}", current_server)
+							.replace("${branch}", current_branch) + " git push " + current_server + " " + current_branch;
+
+				default_exec(msg);
+
+			}
+		});
 	}
 }
