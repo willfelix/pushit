@@ -16,8 +16,9 @@ module.exports = {
 			}
 
 
-			if (stderr) process.stderr.write("Error: " + stderr);
-			else if (is4Log) console.info(chalk.bgBlue("Info: " + cmd + "\n"));
+			// if (stderr) process.stderr.write("Error: " + stderr);
+			// else 
+			if (is4Log) console.info(chalk.bgBlue("Info: " + cmd + "\n"));
 
 			process.stdout.write(stdout);
 		});
