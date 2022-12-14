@@ -1,11 +1,11 @@
 {
   "name": "@willfelix/pushit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The pushit command is a shortcut to git commands",
   "preferGlobal": true,
   "bin": {
-    "pushitn": "bin/pushit.js",
-    "pitn": "bin/pushit.js"
+    "pushit": "bin/pushit.js",
+    "pit": "bin/pushit.js"
   },
   "scripts": {
     "test": "test",
