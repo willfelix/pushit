@@ -8,7 +8,7 @@ Its the junction of "git add -A && git commit -m [message] && git pull origin [b
 
 * Unix-based operating system (OS X or Linux)
 * `git` should be installed
-* [`npm`](https://curl.haxx.se/download.html)
+* [`npm`](https://www.npmjs.com/package/npm)
 
 <br/>
 
@@ -17,7 +17,7 @@ Its the junction of "git add -A && git commit -m [message] && git pull origin [b
 Pushit is installed using npm command.
 
 ```shell
-npm install -g pushit
+npm install -g @willfelix/pushit
 ```
 
 <br/>

@@ -1,5 +1,5 @@
 {
-  "name": "pushit",
+  "name": "@willfelix/pushit",
   "version": "1.0.0",
   "description": "The pushit command is a shortcut to git commands",
   "preferGlobal": true,
