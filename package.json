@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WillFelix/Pushit.git"
+    "url": "git+https://github.com/willFelix/pushit.git"
   },
   "keywords": [
     "pit",
@@ -26,9 +26,9 @@
   "author": "Will Felix <willfelix93@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/WillFelix/Pushit/issues"
+    "url": "https://github.com/willFelix/pushit/issues"
   },
-  "homepage": "https://github.com/WillFelix/Pushit#readme",
+  "homepage": "https://github.com/willFelix/pushit#readme",
   "dependencies": {
     "chalk": "^2.3.0",
     "commander": "^2.13.0",
