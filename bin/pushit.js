@@ -5,13 +5,13 @@ const program = require("commander");
 const questions = require("questions");
 const default_exec = require("../tools/default_exec").default_exec;
 const pit =
-  "git add -A; git commit -m '${message}'; git ${cmd} ${server} ${branch};";
+  "git add -A && git commit -m '${message}' && git ${cmd} ${server} ${branch};";
 
 // Init config variables
 let current_branch, current_server;
 (function () {
   default_exec("git branch | grep '* ' | sed -e 's/* //g'", (stdout) => {
-    current_branch = (stdout || "master").replace("\n", "");
+    current_branch = (stdout || "main").replace("\n", "");
     current_server = (program.origin || "origin").replace("\n", "");
 
     processOptions();
@@ -25,11 +25,11 @@ program
 program
   .command("redmine", "redmine plugin integration")
   .command("github", "github plugin integration")
-  .command("gitlab", "gitlab plugin integration")
-  .command("*")
-  .action((env) =>
-    console.log(chalk.bgRed('Pushit: command "' + env + '" not found\n'))
-  );
+  .command("gitlab", "gitlab plugin integration");
+
+program.action((env) =>
+  console.log(chalk.bgRed('Pushit: command "' + env + '" not found\n'))
+);
 
 program
   .option("-o, --origin <server>", "")
@@ -87,10 +87,7 @@ function processOptions() {
               .replace("${cmd}", "pull")
               .replace("${server}", current_server)
               .replace("${branch}", current_branch) +
-            " git push " +
-            current_server +
-            " " +
-            current_branch;
+            ` git push ${current_server} ${current_branch}`;
 
           default_exec(msg);
         }
