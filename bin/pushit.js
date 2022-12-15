@@ -89,7 +89,8 @@ function processOptions() {
               .replace("${branch}", current_branch) +
             ` git push ${current_server} ${current_branch}`;
 
-          default_exec(msg);
+            console.log(msg);
+          // default_exec(msg);
         }
       }
     );
