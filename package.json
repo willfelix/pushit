@@ -1,6 +1,6 @@
 {
   "name": "@willfelix/pushit",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "The pushit command is a shortcut to git commands",
   "preferGlobal": true,
   "bin": {
@@ -8,8 +8,9 @@
     "pit": "bin/pushit.js"
   },
   "scripts": {
-    "test": "test",
-    "start": "node bin/pushit.js"
+    "test": "jest",
+    "start": "node bin/pushit.js",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -35,5 +36,9 @@
     "path": "^0.12.7",
     "prompt": "^1.0.0",
     "questions": "0.0.6"
+  },
+  "devDependencies": {
+    "husky": "^8.0.0",
+    "jest": "^29.3.1"
   }
 }

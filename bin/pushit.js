@@ -3,23 +3,26 @@
 const chalk = require("chalk");
 const program = require("commander");
 const questions = require("questions");
-const default_exec = require("../tools/default_exec").default_exec;
+const spawn = require("../tools/spawn").main;
 const pit =
   "git add -A && git commit -m '${message}' && git ${cmd} ${server} ${branch};";
 
 // Init config variables
 let current_branch, current_server;
-(function () {
-  default_exec("git branch | grep '* ' | sed -e 's/* //g'", (stdout) => {
-    current_branch = (stdout || "main").replace("\n", "");
-    current_server = (program.origin || "origin").replace("\n", "");
-
-    processOptions();
+(async function () {
+  const get_current_branch = "git branch | grep '* ' | sed -e 's/* //g'";
+  const result = await spawn(get_current_branch, {
+    log: false,
+    split: false,
   });
+  current_branch = (result || "main").replace("\n", "");
+  current_server = (program.origin || "origin").replace("\n", "");
+
+  processOptions();
 })();
 
 program
-  .version("0.0.1", "-v, --version")
+  .version("1.0.4", "-v, --version")
   .description("The pushit command is a shortcut for the git commands");
 
 program
@@ -50,27 +53,27 @@ function processOptions() {
 
   // Status
   if (program.status) {
-    default_exec("git status");
+    spawn("git status");
   }
 
   // Fetch
   if (program.fetch) {
-    default_exec("git fetch");
+    spawn("git fetch");
   }
 
   // Log
   if (program.log) {
-    default_exec("git log");
+    spawn("git log");
   }
 
   // Diff
   if (program.diff) {
-    default_exec("git diff");
+    spawn("git diff");
   }
 
   // Pull
   if (program.pull) {
-    default_exec(`git pull ${current_server} ${current_branch}`);
+    spawn(`git pull ${current_server} ${current_branch}`);
   }
 
   // Commit and Push
@@ -89,8 +92,7 @@ function processOptions() {
               .replace("${branch}", current_branch) +
             ` git push ${current_server} ${current_branch}`;
 
-            console.log(msg);
-          // default_exec(msg);
+          spawn(msg);
         }
       }
     );
