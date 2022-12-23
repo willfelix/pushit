@@ -4,25 +4,17 @@ const chalk = require("chalk");
 const program = require("commander");
 const questions = require("questions");
 const spawn = require("../tools/spawn").main;
-const pit =
-  "git add -A && git commit -m '${message}' && git ${cmd} ${server} ${branch};";
 
-// Init config variables
 let current_branch, current_server;
-(async function () {
-  const get_current_branch = "git branch | grep '* ' | sed -e 's/* //g'";
-  const result = await spawn(get_current_branch, {
-    log: false,
-    split: false,
-  });
-  current_branch = (result || "main").replace("\n", "");
-  current_server = (program.origin || "origin").replace("\n", "");
+getCurrentBranchAndServer().then((result) => {
+  current_branch = result.current_branch;
+  current_server = result.current_server;
 
   processOptions();
-})();
+});
 
 program
-  .version("1.0.4", "-v, --version")
+  .version("1.0.5", "-v, --version")
   .description("The pushit command is a shortcut for the git commands");
 
 program
@@ -73,7 +65,7 @@ function processOptions() {
 
   // Pull
   if (program.pull) {
-    spawn(`git pull ${current_server} ${current_branch}`);
+    spawn(`git pull ${current_server} '${current_branch}'`);
   }
 
   // Commit and Push
@@ -84,17 +76,32 @@ function processOptions() {
       { info: "Do you want continue? [y|N]", required: false },
       (red) => {
         if (red == "y" || red == "Y") {
-          let msg =
-            pit
-              .replace("${message}", program.message)
-              .replace("${cmd}", "pull")
-              .replace("${server}", current_server)
-              .replace("${branch}", current_branch) +
-            ` git push ${current_server} ${current_branch}`;
+          const pit = `
+            git add -A &&
+            git commit -m '${program.message}' &&
+            git pull ${current_server} '${current_branch}';
+            git push ${current_server} '${current_branch}'
+          `;
 
-          spawn(msg);
+          spawn(pit);
         }
       }
     );
   }
+}
+
+async function getCurrentBranchAndServer() {
+  const get_current_branch_cmd = "git branch | grep '* ' | sed -e 's/* //g'";
+  const result = await spawn(get_current_branch_cmd, {
+    log: false,
+    split: false,
+  });
+
+  const current_branch = (result || "main").replace("\n", "");
+  const current_server = (program.origin || "origin").replace("\n", "");
+
+  return {
+    current_branch,
+    current_server,
+  };
 }
